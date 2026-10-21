@@ -3,7 +3,7 @@
 # ==========================================
 
 # 1. Build Stage
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-RUN npm ci
+RUN npm install
 
 # Generate Prisma Client
 RUN npx prisma generate
@@ -24,7 +24,7 @@ COPY src ./src
 RUN npm run build
 
 # 2. Production Runtime Stage
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
@@ -34,7 +34,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY prisma ./prisma/
 
-RUN npm ci --omit=dev && npx prisma generate
+RUN npm install --omit=dev && npx prisma generate
 
 # Copy compiled JavaScript output from builder
 COPY --from=builder /app/dist ./dist
