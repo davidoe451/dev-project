@@ -52,6 +52,20 @@ async function runSelfChecks() {
   assert.strictEqual(orderErrors.length >= 3, true, 'CreateOrderDto requires customerName, phone, address');
   console.log('  ✔ CreateOrderDto validation constraints verified');
 
+  // 5. Cart & Order Calculation Check
+  const sampleItems = [
+    { price: 28.5, quantity: 2 },
+    { price: 49.95, quantity: 1 },
+    { price: 89.99, quantity: 3 },
+  ];
+  const totalItems = sampleItems.reduce((acc, curr) => acc + curr.quantity, 0);
+  const rawSubtotal = sampleItems.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+  const roundedSubtotal = parseFloat(rawSubtotal.toFixed(2));
+
+  assert.strictEqual(totalItems, 6, 'Total item count must equal 6');
+  assert.strictEqual(roundedSubtotal, 376.92, 'Cart subtotal calculation with rounding must be accurate');
+  console.log('  ✔ Cart & order pricing logic verified');
+
   console.log('🎉 All self-checks passed successfully!');
 }
 

@@ -12,37 +12,47 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createOrder(userId: string, dto: CreateOrderDto) {
-    const cartItems = await this.prisma.cartItem.findMany({
-      where: { userId },
-      include: { product: true },
-    });
-
-    if (!cartItems || cartItems.length === 0) {
-      throw new BadRequestException('Your cart is empty');
-    }
-
-    // Verify stock availability
-    for (const item of cartItems) {
-      if (!item.product.isActive) {
-        throw new BadRequestException(`Product ${item.product.name} is no longer active`);
-      }
-      if (item.product.stock < item.quantity) {
-        throw new BadRequestException(
-          `Product ${item.product.name} has only ${item.product.stock} items in stock`,
-        );
-      }
-    }
-
-    const totalAmount = cartItems.reduce(
-      (sum, item) => sum + Number(item.product.price) * item.quantity,
-      0,
-    );
-
-    const orderNumber = 'ORD-' + Date.now() + '-' + Math.floor(1000 + Math.random() * 9000);
-
-    // Database transaction: Create order, create order items, decrement stock, clear cart
     return this.prisma.$transaction(async (tx) => {
-      // 1. Create Order
+      const cartItems = await tx.cartItem.findMany({
+        where: { userId },
+        include: { product: true },
+      });
+
+      if (!cartItems || cartItems.length === 0) {
+        throw new BadRequestException('Your cart is empty');
+      }
+
+      // Verify active status and atomically decrement stock with lower-bound check
+      for (const item of cartItems) {
+        if (!item.product.isActive) {
+          throw new BadRequestException(`Product ${item.product.name} is no longer active`);
+        }
+
+        const updateResult = await tx.product.updateMany({
+          where: {
+            id: item.productId,
+            stock: { gte: item.quantity },
+          },
+          data: {
+            stock: { decrement: item.quantity },
+          },
+        });
+
+        if (updateResult.count === 0) {
+          throw new BadRequestException(
+            `Insufficient stock for product "${item.product.name}". It may have just sold out.`,
+          );
+        }
+      }
+
+      const totalAmount = cartItems.reduce(
+        (sum, item) => sum + Number(item.product.price) * item.quantity,
+        0,
+      );
+
+      const orderNumber = 'ORD-' + Date.now() + '-' + Math.floor(1000 + Math.random() * 9000);
+
+      // 1. Create Order & OrderItems
       const order = await tx.order.create({
         data: {
           orderNumber,
@@ -75,19 +85,7 @@ export class OrdersService {
         },
       });
 
-      // 2. Decrement stock
-      for (const item of cartItems) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: {
-              decrement: item.quantity,
-            },
-          },
-        });
-      }
-
-      // 3. Clear cart
+      // 2. Clear cart
       await tx.cartItem.deleteMany({
         where: { userId },
       });

@@ -64,20 +64,29 @@ export class ProductsService {
 
     const where: any = {
       isActive: true,
+      AND: [],
     };
 
     if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { description: { contains: search } },
-      ];
+      where.AND.push({
+        OR: [
+          { name: { contains: search } },
+          { description: { contains: search } },
+        ],
+      });
     }
 
     if (category) {
-      where.OR = [
-        { categoryId: category },
-        { category: { slug: category } },
-      ];
+      where.AND.push({
+        OR: [
+          { categoryId: category },
+          { category: { slug: category } },
+        ],
+      });
+    }
+
+    if (where.AND.length === 0) {
+      delete where.AND;
     }
 
     if (brand) {
