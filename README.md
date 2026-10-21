@@ -64,20 +64,20 @@ backend/
 
 Create `.env` and configure your database credentials:
 
-Default variables in `.env`:
+Example variables in `.env`:
 ```env
 NODE_ENV=development
-PORT=3000
+PORT=port
 
 # Database Connection
-DATABASE_URL="mysql://root:password@localhost:3306/clothing_store"
+DATABASE_URL="mysql://username:password@hostname:port/database_name"
 
 # JWT Secret & Expiry
-JWT_SECRET=super_secret_clothing_store_jwt_key_2026
-JWT_EXPIRATION=7d
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRATION=token_expiry
 
 # Allowed Frontend Origins (Angular)
-CORS_ORIGIN="http://localhost:4200"
+CORS_ORIGIN="http://localhost:frontend_port"
 ```
 
 ### 3. Database Migration & Seed
