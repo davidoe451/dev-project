@@ -47,7 +47,6 @@ backend/
 │   └── main.ts                         # Application entrypoint & Swagger setup
 ├── test/
 │   └── self-check.ts                   # Automated logic & validation tests
-├── .env.example
 ├── package.json
 └── tsconfig.json
 ```
@@ -63,11 +62,7 @@ backend/
 
 ### 2. Configure Environment
 
-Copy `.env.example` to `.env` and configure your database credentials:
-
-```bash
-cp .env.example .env
-```
+Create `.env` and configure your database credentials:
 
 Default variables in `.env`:
 ```env
