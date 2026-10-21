@@ -29,9 +29,17 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS for Angular Frontend
+  // Enable CORS
+  const corsOrigin = configService.get<string>('cors.origin') || '*';
+  const parsedOrigin =
+    corsOrigin === '*'
+      ? true
+      : corsOrigin.includes(',')
+        ? corsOrigin.split(',').map((o) => o.trim())
+        : corsOrigin;
+
   app.enableCors({
-    origin: configService.get<string>('cors.origin') || 'http://localhost:4200',
+    origin: parsedOrigin,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   });
@@ -69,9 +77,9 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(port);
-  logger.log(`🚀 Application is running on: http://localhost:${port}/api/v1`);
-  logger.log(`📖 Swagger API documentation: http://localhost:${port}/api/docs`);
+  await app.listen(port, '0.0.0.0');
+  logger.log(`🚀 Application is running on: http://0.0.0.0:${port}/api/v1`);
+  logger.log(`📖 Swagger API documentation: http://0.0.0.0:${port}/api/docs`);
 }
 
 bootstrap();
