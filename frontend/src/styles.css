@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #16263a;
+  --color-primary-container: #223751;
+  --color-primary-hover: #203652;
+  --color-primary-light: #f0f5fa;
+  --color-on-primary: #ffffff;
+
+  --color-navy-border: #233b58;
+  --color-dark-surface: #0c1421;
+  --color-dark-bg: #0a111a;
+
+  --color-navy-950: #0b131d;
+  --color-navy-900: #16263a;
+  --color-navy-800: #1f334d;
+  --color-navy-700: #2d496d;
+  --color-navy-600: #3f6492;
+  --color-navy-400: #7195c2;
+  --color-navy-300: #9cb8dd;
+  --color-navy-100: #e2ebf5;
+  --color-navy-50: #f0f5fa;
+
+  --font-sans: var(--font-active);
+  --font-display: 'Bodoni Moda', Georgia, serif;
+  --font-editorial: 'Playfair Display', Georgia, serif;
+}
+
+@layer base {
+  :root {
+    --brand-navy: #16263a;
+    --brand-navy-hover: #1f334d;
+    --brand-navy-light: #f0f5fa;
+    --font-active: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Force all elements and Angular component hosts to use the active language font */
+  *,
+  :host,
+  ::before,
+  ::after {
+    font-family: var(--font-active);
+  }
+
+  /* Protect Material Symbols icons from font override */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+  }
+
+  .font-display,
+  .font-serif,
+  .font-display *:not(.material-symbols-outlined),
+  .font-serif *:not(.material-symbols-outlined) {
+    font-family: 'Bodoni Moda', Georgia, serif !important;
+  }
+
+  .font-editorial,
+  .font-editorial *:not(.material-symbols-outlined) {
+    font-family: 'Playfair Display', Georgia, serif !important;
+  }
+
+  /* Luxury Toast Slide Animations */
+  @keyframes luxurySlideIn {
+    0% {
+      opacity: 0;
+      transform: translate3d(120%, 0, 0) scale(0.96);
+    }
+    65% {
+      opacity: 1;
+      transform: translate3d(-2%, 0, 0) scale(1.008);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes luxurySlideOut {
+    0% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(120%, 0, 0) scale(0.95);
+    }
+  }
+
+  @keyframes toastProgress {
+    0% {
+      width: 100%;
+    }
+    100% {
+      width: 0%;
+    }
+  }
+
+  .luxury-toast-enter {
+    animation: luxurySlideIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .luxury-toast-exit {
+    animation: luxurySlideOut 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  .luxury-toast-progress {
+    animation: toastProgress 4s linear forwards;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit !important;
+  }
+
+  /* Optical Weight Scaling for English (Poppins) - Thinner, lighter, luxury aesthetic */
+  html[lang='en'],
+  body[data-lang='en'] {
+    letter-spacing: -0.01em;
+  }
+
+  html[lang='en'] h1,
+  body[data-lang='en'] h1,
+  html[lang='en'] h2,
+  body[data-lang='en'] h2 {
+    font-weight: 600 !important;
+    letter-spacing: -0.025em;
+  }
+
+  html[lang='en'] h3,
+  body[data-lang='en'] h3,
+  html[lang='en'] h4,
+  body[data-lang='en'] h4 {
+    font-weight: 550 !important;
+    letter-spacing: -0.015em;
+  }
+
+  html[lang='en'] .font-black,
+  body[data-lang='en'] .font-black,
+  html[lang='en'] .font-extrabold,
+  body[data-lang='en'] .font-extrabold {
+    font-weight: 600 !important;
+  }
+
+  html[lang='en'] .font-bold,
+  body[data-lang='en'] .font-bold {
+    font-weight: 500 !important;
+  }
+
+  html[lang='en'] .font-semibold,
+  body[data-lang='en'] .font-semibold {
+    font-weight: 500 !important;
+  }
+
+  html[lang='en'] button,
+  body[data-lang='en'] button,
+  html[lang='en'] app-button button,
+  body[data-lang='en'] app-button button {
+    font-weight: 500 !important;
+    letter-spacing: 0.01em;
+  }
+
+  html[lang='en'] p,
+  body[data-lang='en'] p,
+  html[lang='en'] span,
+  body[data-lang='en'] span {
+    font-weight: 350;
+  }
+
+  /* Text selection highlight */
+  ::selection {
+    background-color: #16263a;
+    color: #ffffff;
+  }
+
+  /* High-contrast text selection for dark mode so Select All / highlights are clearly visible */
+  html.dark ::selection,
+  .dark ::selection,
+  :root[data-theme='dark'] ::selection,
+  html.dark *::selection,
+  .dark *::selection {
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+
+  html.dark input::selection,
+  html.dark textarea::selection,
+  .dark input::selection,
+  .dark textarea::selection,
+  :root[data-theme='dark'] input::selection,
+  :root[data-theme='dark'] textarea::selection {
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+
+  html.dark input,
+  html.dark textarea,
+  .dark input,
+  .dark textarea {
+    caret-color: #ffffff;
+  }
+
+  body {
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: var(--font-active);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: font-family 0.15s ease-in-out;
+  }
+
+  html.dark body,
+  .dark body,
+  :root[data-theme='dark'] body {
+    background-color: #0a111a;
+    color: #f8fafc;
+  }
+}
+
+/* Explicit high-specificity selection rules for form controls in Dark Mode */
+html.dark input::selection,
+html.dark textarea::selection,
+.dark input::selection,
+.dark textarea::selection,
+:root[data-theme='dark'] input::selection,
+:root[data-theme='dark'] textarea::selection {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+html.dark ::selection,
+.dark ::selection,
+:root[data-theme='dark'] ::selection {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
