@@ -1,6 +1,3 @@
-# Documentation
-docs/
-
 # Environment files
 .env
 .env.local
