@@ -7,6 +7,11 @@ export interface Role {
 export interface User {
   id: number;
   email: string;
+  fullName?: string;
+  name?: string;
+  username?: string;
+  phone?: string;
+  address?: string;
   isActive: boolean;
   roleId: number;
   role?: Role;

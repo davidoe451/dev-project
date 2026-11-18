@@ -1,0 +1,28 @@
+<div class="lg:col-span-9 space-y-6">
+  @if (isLoading()) {
+    <div class="grid gap-6 transition-all duration-300" [class.grid-cols-1]="true" [class.sm:grid-cols-2]="true" [class.xl:grid-cols-3]="gridCols() === 3" [class.xl:grid-cols-4]="gridCols() === 4" role="status" aria-label="Loading products">
+      @for (item of skeletonPlaceholders(); track item) {
+        <app-card padding="none" class="overflow-hidden">
+          <app-skeleton class="aspect-4/5 w-full" />
+          <div class="p-4 space-y-3"><app-skeleton class="h-3 w-24" /><app-skeleton class="h-5 w-3/4" /><app-skeleton class="h-4 w-20" /><app-skeleton class="h-9 w-full mt-2" /></div>
+        </app-card>
+      }
+    </div>
+  } @else if (products().length === 0) {
+    <app-card padding="lg" class="text-center py-16 space-y-4">
+      <span class="material-symbols-outlined text-4xl text-slate-400">inventory_2</span>
+      <div class="space-y-1">
+        <h2 class="font-display text-xl uppercase text-slate-950 dark:text-white">No matching pieces found</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">Try broadening your search keywords, clearing size constraints, or adjusting the price range.</p>
+      </div>
+      <div class="pt-2"><app-button variant="primary" size="md" (click)="resetFilters.emit()">Reset All Filters</app-button></div>
+    </app-card>
+  } @else {
+    <div class="grid gap-6 transition-all duration-300" [class.grid-cols-1]="true" [class.sm:grid-cols-2]="true" [class.xl:grid-cols-3]="gridCols() === 3" [class.xl:grid-cols-4]="gridCols() === 4">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product" (quickAdd)="quickAdd.emit($event)" />
+      }
+    </div>
+    <app-pagination [page]="page()" [totalPages]="totalPages()" [totalItems]="totalItems()" [limit]="limit()" (pageChange)="pageChange.emit($event)" />
+  }
+</div>

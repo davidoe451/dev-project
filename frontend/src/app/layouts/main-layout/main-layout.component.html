@@ -1,0 +1,842 @@
+<div
+  class="min-h-screen flex flex-col bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white transition-colors selection:bg-primary selection:text-white"
+>
+  <!-- 1. Top Announcement Marquee Bar (#16263A Deep Luxury Navy) -->
+  <div
+    class="bg-primary text-white py-2 px-4 sm:px-8 tracking-widest text-center uppercase text-[10px] sm:text-[11px] font-semibold overflow-hidden border-b border-navy-border select-none"
+  >
+    <div class="inline-block animate-pulse tracking-[0.2em]">
+      COMPLIMENTARY WORLDWIDE ARMORED COURIER DELIVERY ON ORDERS OVER $500 • EXCLUSIVE ARCHIVE VAULT ACCESSIBLE
+    </div>
+  </div>
+
+  <!-- 2. Main Sticky Navigation Header -->
+  <header
+    class="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(22,38,58,0.04)] transition-colors dark:border-slate-800/80 dark:bg-dark-bg/95"
+  >
+    <div class="mx-auto flex h-18 sm:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <!-- Left: Brand Logo & Desktop Mega Nav Links -->
+      <div class="flex items-center gap-8 xl:gap-10">
+        <!-- Logo -->
+        <a routerLink="/" class="group flex items-center gap-2 active:scale-95 transition-transform">
+          <span
+            class="font-display font-semibold text-2xl sm:text-3xl tracking-tight uppercase text-slate-950 dark:text-white group-hover:text-primary dark:group-hover:text-slate-200 transition-colors"
+          >
+            WEAREZ
+          </span>
+          <span class="w-1.5 h-1.5 bg-primary dark:bg-slate-300 rounded-none inline-block"></span>
+        </a>
+
+        <!-- Desktop Mega Nav -->
+        <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs uppercase tracking-widest font-bold">
+          <!-- 1. BRANDS (Mega Dropdown) -->
+          <div class="relative group py-6">
+            <a
+              routerLink="/products"
+              class="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-primary dark:group-hover:text-white transition-colors cursor-pointer select-none"
+            >
+              <span>BRANDS</span>
+              <span class="material-symbols-outlined text-xs transition-transform duration-200 group-hover:rotate-180 text-slate-400">
+                expand_more
+              </span>
+            </a>
+
+            <!-- Brands Dropdown Menu -->
+            <div
+              class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 absolute top-full -left-4 w-[680px] bg-white dark:bg-dark-surface border border-slate-200 dark:border-slate-800 shadow-2xl p-5 z-50 text-xs"
+            >
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                <span class="text-xs uppercase font-bold tracking-[0.15em] text-primary dark:text-sky-300 font-mono">
+                  CURATED ARCHIVE BRANDS
+                </span>
+                <a
+                  routerLink="/products"
+                  class="text-[11px] uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-white font-bold"
+                >
+                  ALL BRANDS →
+                </a>
+              </div>
+
+              <div class="grid grid-cols-3 gap-5">
+                <div class="space-y-1">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block mb-2 font-mono">
+                    WEAREZ ATELIERS
+                  </span>
+                  <ul class="space-y-0.5">
+                    @for (brand of houseBrands; track brand) {
+                      <li>
+                        <a
+                          [routerLink]="['/products']"
+                          [queryParams]="{ search: brand }"
+                          class="group/item flex items-center justify-between py-1.5 px-2 -mx-2 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
+                        >
+                          <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs group-hover/item:text-primary dark:group-hover/item:text-sky-300">
+                            {{ brand }}
+                          </span>
+                          <span class="material-symbols-outlined text-xs text-slate-300 group-hover/item:text-primary">
+                            chevron_right
+                          </span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+
+                <div class="space-y-1 border-l border-slate-100 dark:border-slate-800 pl-4">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block mb-2 font-mono">
+                    RUNWAY &amp; LUXURY
+                  </span>
+                  <ul class="space-y-0.5">
+                    @for (brand of luxuryRunwayBrands; track brand) {
+                      <li>
+                        <a
+                          [routerLink]="['/products']"
+                          [queryParams]="{ search: brand }"
+                          class="group/item flex items-center justify-between py-1.5 px-2 -mx-2 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
+                        >
+                          <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs group-hover/item:text-primary dark:group-hover/item:text-sky-300">
+                            {{ brand }}
+                          </span>
+                          <span class="material-symbols-outlined text-xs text-slate-300 group-hover/item:text-primary">
+                            chevron_right
+                          </span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+
+                <div class="space-y-1 border-l border-slate-100 dark:border-slate-800 pl-4">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block mb-2 font-mono">
+                    STREET &amp; HERITAGE
+                  </span>
+                  <ul class="space-y-0.5">
+                    @for (brand of contemporaryHeritageBrands; track brand) {
+                      <li>
+                        <a
+                          [routerLink]="['/products']"
+                          [queryParams]="{ search: brand }"
+                          class="group/item flex items-center justify-between py-1.5 px-2 -mx-2 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
+                        >
+                          <span class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs group-hover/item:text-primary dark:group-hover/item:text-sky-300">
+                            {{ brand }}
+                          </span>
+                          <span class="material-symbols-outlined text-xs text-slate-300 group-hover/item:text-primary">
+                            chevron_right
+                          </span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. MEN (2-Level Mega Dropdown) -->
+          <div class="relative group py-6">
+            <a
+              routerLink="/products"
+              [queryParams]="{ gender: 'men' }"
+              class="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-primary dark:group-hover:text-white transition-colors cursor-pointer select-none"
+            >
+              <span>MEN</span>
+              <span class="material-symbols-outlined text-xs transition-transform duration-200 group-hover:rotate-180 text-slate-400">
+                expand_more
+              </span>
+            </a>
+
+            <div
+              class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 absolute top-full -left-20 w-[640px] bg-white dark:bg-dark-surface border border-slate-200 dark:border-slate-800 shadow-2xl p-5 z-50 text-xs"
+            >
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                <span class="text-xs uppercase font-bold tracking-[0.15em] text-primary dark:text-sky-300 font-mono">
+                  MEN'S READY-TO-WEAR
+                </span>
+                <a
+                  routerLink="/products"
+                  [queryParams]="{ gender: 'men' }"
+                  class="text-[11px] uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-white font-bold"
+                >
+                  ALL MEN →
+                </a>
+              </div>
+
+              <div class="grid grid-cols-12 gap-5">
+                <div class="col-span-5 space-y-1 pr-3 border-r border-slate-100 dark:border-slate-800">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block mb-2 font-mono">
+                    CATEGORIES
+                  </span>
+                  @for (cat of menCategories; track cat.key) {
+                    <a
+                      [routerLink]="['/products']"
+                      [queryParams]="{ category: cat.key, gender: 'men' }"
+                      (mouseenter)="activeMenCategory.set(cat.key)"
+                      class="flex items-center justify-between p-2.5 text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer"
+                      [class.bg-primary]="activeMenCategory() === cat.key"
+                      [class.text-white]="activeMenCategory() === cat.key"
+                      [class.dark:bg-slate-800]="activeMenCategory() === cat.key"
+                      [class.dark:text-sky-300]="activeMenCategory() === cat.key"
+                      [class.text-slate-700]="activeMenCategory() !== cat.key"
+                      [class.dark:text-slate-300]="activeMenCategory() !== cat.key"
+                      [class.hover:bg-slate-100]="activeMenCategory() !== cat.key"
+                      [class.dark:hover:bg-slate-800/50]="activeMenCategory() !== cat.key"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base opacity-75">{{ cat.icon }}</span>
+                        <span>{{ cat.label }}</span>
+                      </div>
+                      <span class="material-symbols-outlined text-sm">chevron_right</span>
+                    </a>
+                  }
+                </div>
+
+                <div class="col-span-7 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block font-mono">
+                      FEATURED BRANDS
+                    </span>
+                    <a
+                      [routerLink]="['/products']"
+                      [queryParams]="{ category: activeMenCategory(), gender: 'men' }"
+                      class="text-[11px] text-primary dark:text-sky-300 font-bold uppercase tracking-wider hover:underline"
+                    >
+                      ALL IN {{ getCategoryLabel(menCategories, activeMenCategory()) }} →
+                    </a>
+                  </div>
+
+                  <ul class="grid grid-cols-1 gap-1.5">
+                    @for (bName of getCategoryBrands(menCategories, activeMenCategory()); track bName) {
+                      <li>
+                        <a
+                          [routerLink]="['/products']"
+                          [queryParams]="{ category: activeMenCategory(), search: bName, gender: 'men' }"
+                          class="group/item flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900/80 hover:bg-primary hover:text-white dark:hover:bg-slate-800 transition-colors"
+                        >
+                          <span class="font-bold uppercase tracking-wider text-[13px] text-slate-900 dark:text-white group-hover/item:text-white dark:group-hover/item:text-sky-300">
+                            {{ bName }}
+                          </span>
+                          <span class="material-symbols-outlined text-base text-slate-400 group-hover/item:text-white transition-transform group-hover/item:translate-x-1">
+                            arrow_forward
+                          </span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. WOMEN (2-Level Mega Dropdown) -->
+          <div class="relative group py-6">
+            <a
+              routerLink="/products"
+              [queryParams]="{ gender: 'women' }"
+              class="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-primary dark:group-hover:text-white transition-colors cursor-pointer select-none"
+            >
+              <span>WOMEN</span>
+              <span class="material-symbols-outlined text-xs transition-transform duration-200 group-hover:rotate-180 text-slate-400">
+                expand_more
+              </span>
+            </a>
+
+            <div
+              class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 absolute top-full -left-20 w-[640px] bg-white dark:bg-dark-surface border border-slate-200 dark:border-slate-800 shadow-2xl p-5 z-50 text-xs"
+            >
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                <span class="text-xs uppercase font-bold tracking-[0.15em] text-primary dark:text-sky-300 font-mono">
+                  WOMEN'S READY-TO-WEAR
+                </span>
+                <a
+                  routerLink="/products"
+                  [queryParams]="{ gender: 'women' }"
+                  class="text-[11px] uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-white font-bold"
+                >
+                  ALL WOMEN →
+                </a>
+              </div>
+
+              <div class="grid grid-cols-12 gap-5">
+                <div class="col-span-5 space-y-1 pr-3 border-r border-slate-100 dark:border-slate-800">
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block mb-2 font-mono">
+                    CATEGORIES
+                  </span>
+                  @for (cat of womenCategories; track cat.key) {
+                    <a
+                      [routerLink]="['/products']"
+                      [queryParams]="{ category: cat.key, gender: 'women' }"
+                      (mouseenter)="activeWomenCategory.set(cat.key)"
+                      class="flex items-center justify-between p-2.5 text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer"
+                      [class.bg-primary]="activeWomenCategory() === cat.key"
+                      [class.text-white]="activeWomenCategory() === cat.key"
+                      [class.dark:bg-slate-800]="activeWomenCategory() === cat.key"
+                      [class.dark:text-sky-300]="activeWomenCategory() === cat.key"
+                      [class.text-slate-700]="activeWomenCategory() !== cat.key"
+                      [class.dark:text-slate-300]="activeWomenCategory() !== cat.key"
+                      [class.hover:bg-slate-100]="activeWomenCategory() !== cat.key"
+                      [class.dark:hover:bg-slate-800/50]="activeWomenCategory() !== cat.key"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base opacity-75">{{ cat.icon }}</span>
+                        <span>{{ cat.label }}</span>
+                      </div>
+                      <span class="material-symbols-outlined text-sm">chevron_right</span>
+                    </a>
+                  }
+                </div>
+
+                <div class="col-span-7 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold block font-mono">
+                      FEATURED BRANDS
+                    </span>
+                    <a
+                      [routerLink]="['/products']"
+                      [queryParams]="{ category: activeWomenCategory(), gender: 'women' }"
+                      class="text-[11px] text-primary dark:text-sky-300 font-bold uppercase tracking-wider hover:underline"
+                    >
+                      ALL IN {{ getCategoryLabel(womenCategories, activeWomenCategory()) }} →
+                    </a>
+                  </div>
+
+                  <ul class="grid grid-cols-1 gap-1.5">
+                    @for (bName of getCategoryBrands(womenCategories, activeWomenCategory()); track bName) {
+                      <li>
+                        <a
+                          [routerLink]="['/products']"
+                          [queryParams]="{ category: activeWomenCategory(), search: bName, gender: 'women' }"
+                          class="group/item flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900/80 hover:bg-primary hover:text-white dark:hover:bg-slate-800 transition-colors"
+                        >
+                          <span class="font-bold uppercase tracking-wider text-[13px] text-slate-900 dark:text-white group-hover/item:text-white dark:group-hover/item:text-sky-300">
+                            {{ bName }}
+                          </span>
+                          <span class="material-symbols-outlined text-base text-slate-400 group-hover/item:text-white transition-transform group-hover/item:translate-x-1">
+                            arrow_forward
+                          </span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. SEASONAL (Capsule Drops) -->
+          <div class="relative group py-6">
+            <a
+              routerLink="/products"
+              class="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-primary dark:group-hover:text-white transition-colors cursor-pointer select-none"
+            >
+              <span>SEASONAL</span>
+              <span class="material-symbols-outlined text-xs transition-transform duration-200 group-hover:rotate-180 text-slate-400">
+                expand_more
+              </span>
+            </a>
+
+            <div
+              class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 absolute top-full -left-12 w-[400px] bg-white dark:bg-dark-surface border border-slate-200 dark:border-slate-800 shadow-2xl p-5 z-50 text-xs"
+            >
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
+                <span class="text-xs uppercase font-bold tracking-[0.15em] text-primary dark:text-sky-300 font-mono">
+                  SEASONAL COLLECTIONS
+                </span>
+                <a
+                  routerLink="/products"
+                  class="text-[11px] uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-white font-bold"
+                >
+                  ALL DROPS →
+                </a>
+              </div>
+
+              <ul class="space-y-1.5">
+                @for (s of seasonalCollections; track s.name) {
+                  <li>
+                    <a
+                      [routerLink]="['/products']"
+                      [queryParams]="{ season: s.season }"
+                      class="group/s flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-900/60 hover:bg-primary hover:text-white dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <span class="font-bold uppercase tracking-wider text-[13px] text-slate-900 dark:text-white group-hover/s:text-white dark:group-hover/s:text-sky-300">
+                        {{ s.name }}
+                      </span>
+                      <span class="text-[10px] uppercase tracking-widest px-2 py-0.5 bg-slate-200 dark:bg-slate-800 group-hover/s:bg-white/20 text-slate-700 dark:text-slate-300 group-hover/s:text-white font-mono font-bold">
+                        {{ s.tag }}
+                      </span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+
+          <!-- Direct Catalog Link -->
+          <a
+            routerLink="/products"
+            routerLinkActive="text-primary dark:text-sky-300"
+            class="text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors"
+          >
+            READY-TO-WEAR
+          </a>
+        </nav>
+      </div>
+
+      <!-- Right Side Utility Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Search Archive Button with Overlay trigger & Tooltip -->
+        <button
+          type="button"
+          (click)="openSearchOverlay()"
+          aria-label="Search Archive"
+          class="p-2 text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors flex items-center justify-center cursor-pointer"
+          title="Search Archive (Ctrl+K / Cmd+K)"
+        >
+          <span class="material-symbols-outlined text-xl">search</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button
+          type="button"
+          (click)="theme.toggle()"
+          [attr.aria-label]="theme.isDark() ? 'Switch to Light Theme' : 'Switch to Dark Theme'"
+          class="p-2 text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors flex items-center justify-center cursor-pointer"
+          title="Toggle theme"
+        >
+          @if (theme.isDark()) {
+            <span class="material-symbols-outlined text-xl text-amber-400">light_mode</span>
+          } @else {
+            <span class="material-symbols-outlined text-xl text-primary">dark_mode</span>
+          }
+        </button>
+
+        <!-- User Profile / Auth State -->
+        @if (auth.isAuthenticated()) {
+          <div class="flex items-center gap-2">
+            @if (auth.isAdmin()) {
+              <a routerLink="/admin/customers" class="hidden sm:inline-block">
+                <app-button variant="primary" size="sm">
+                  <span class="material-symbols-outlined text-base mr-1">admin_panel_settings</span>
+                  <span>Admin</span>
+                </app-button>
+              </a>
+            }
+            <a
+              routerLink="/profile"
+              class="flex items-center gap-2 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-white transition-all bg-white dark:bg-slate-900"
+              title="View Profile"
+            >
+              <span class="w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center">
+                {{ (auth.currentUser()?.email || 'U').slice(0, 1).toUpperCase() }}
+              </span>
+              <span class="hidden sm:inline-block text-[11px] font-semibold text-slate-700 dark:text-slate-300 max-w-[120px] truncate">
+                {{ auth.currentUser()?.email }}
+              </span>
+            </a>
+
+            <app-button
+              type="button"
+              variant="outline"
+              size="icon"
+              (click)="auth.logout()"
+              ariaLabel="Sign Out"
+            >
+              <span class="material-symbols-outlined text-lg">logout</span>
+            </app-button>
+          </div>
+        } @else {
+          <div class="hidden sm:flex items-center gap-2">
+            <a routerLink="/auth/login">
+              <app-button variant="ghost" size="sm">Sign In</app-button>
+            </a>
+            <a routerLink="/auth/register">
+              <app-button variant="primary" size="sm">Register</app-button>
+            </a>
+          </div>
+        }
+
+        <!-- Mobile Hamburger Toggle -->
+        <app-button
+          type="button"
+          variant="ghost"
+          size="icon"
+          class="lg:hidden"
+          (click)="isMobileMenuOpen.set(!isMobileMenuOpen())"
+          ariaLabel="Toggle navigation menu"
+        >
+          <span class="material-symbols-outlined text-2xl">
+            {{ isMobileMenuOpen() ? 'close' : 'menu' }}
+          </span>
+        </app-button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    @if (isMobileMenuOpen()) {
+      <div
+        class="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-dark-bg p-4 space-y-4 max-h-[80vh] overflow-y-auto"
+      >
+        <!-- Mobile Quick Search Bar -->
+        <div class="relative">
+          <span class="material-symbols-outlined text-base absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            search
+          </span>
+          <input
+            type="text"
+            [value]="headerSearchQuery()"
+            (input)="onHeaderSearchInput($any($event.target).value)"
+            (keydown.enter)="executeSearch()"
+            placeholder="SEARCH CATALOG (E.G. JEANS, HOODIE)..."
+            class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs px-3 py-2.5 pl-9 pr-9 text-slate-900 dark:text-white uppercase tracking-wider font-semibold focus:outline-none focus:border-primary dark:focus:border-sky-400"
+          />
+          @if (headerSearchQuery().trim()) {
+            <button
+              type="button"
+              (click)="headerSearchQuery.set(''); onHeaderSearchInput('')"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer"
+              title="Clear"
+            >
+              <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+          }
+        </div>
+        @if (headerSearchSuggestions().length > 0) {
+          <div class="flex flex-wrap gap-1.5 pb-2">
+            @for (term of headerSearchSuggestions(); track term) {
+              <button
+                type="button"
+                (click)="applyHeaderSuggestion(term); executeSearch(term)"
+                class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:border-primary cursor-pointer"
+              >
+                {{ term }}
+              </button>
+            }
+          </div>
+        }
+
+        <div class="space-y-1">
+          <span class="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400 block font-mono">
+            SECTIONS
+          </span>
+          <a
+            routerLink="/"
+            (click)="isMobileMenuOpen.set(false)"
+            class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+          >
+            Home
+          </a>
+          <a
+            routerLink="/products"
+            (click)="isMobileMenuOpen.set(false)"
+            class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+          >
+            All Ready-to-Wear
+          </a>
+          <a
+            [routerLink]="['/products']"
+            [queryParams]="{ gender: 'men' }"
+            (click)="isMobileMenuOpen.set(false)"
+            class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+          >
+            Men's Collection
+          </a>
+          <a
+            [routerLink]="['/products']"
+            [queryParams]="{ gender: 'women' }"
+            (click)="isMobileMenuOpen.set(false)"
+            class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+          >
+            Women's Collection
+          </a>
+        </div>
+
+        <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <span class="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400 block font-mono">
+            ARCHIVE BRANDS
+          </span>
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            @for (brand of houseBrands; track brand) {
+              <a
+                [routerLink]="['/products']"
+                [queryParams]="{ search: brand }"
+                (click)="isMobileMenuOpen.set(false)"
+              >
+                <app-badge variant="secondary" size="sm">{{ brand }}</app-badge>
+              </a>
+            }
+          </div>
+        </div>
+
+        @if (auth.isAuthenticated()) {
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <a
+              routerLink="/profile"
+              (click)="isMobileMenuOpen.set(false)"
+              class="block py-1 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+            >
+              Client Profile
+            </a>
+            @if (auth.isAdmin()) {
+              <a
+                routerLink="/admin/customers"
+                (click)="isMobileMenuOpen.set(false)"
+                class="block py-1 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
+              >
+                Admin · Customer Accounts
+              </a>
+            }
+            <div class="pt-2">
+              <app-button
+                type="button"
+                variant="danger"
+                size="sm"
+                [fullWidth]="true"
+                (click)="isMobileMenuOpen.set(false); auth.logout()"
+              >
+                Sign Out
+              </app-button>
+            </div>
+          </div>
+        } @else {
+          <div class="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <a routerLink="/auth/login" (click)="isMobileMenuOpen.set(false)">
+              <app-button variant="outline" [fullWidth]="true" size="sm">
+                Sign In
+              </app-button>
+            </a>
+            <a routerLink="/auth/register" (click)="isMobileMenuOpen.set(false)">
+              <app-button variant="primary" [fullWidth]="true" size="sm">
+                Create Account
+              </app-button>
+            </a>
+          </div>
+        }
+      </div>
+    }
+  </header>
+
+  <!-- 3. Dynamic Page View Outlet -->
+  <main class="flex-1">
+    <router-outlet />
+  </main>
+
+  <!-- 4. Global Quick Search Overlay / Modal (Ctrl + K) -->
+  @if (isSearchOpen()) {
+    <div
+      class="fixed inset-0 z-[100] flex flex-col items-center pt-12 sm:pt-20 px-4 bg-slate-950/80 backdrop-blur-xl animate-in fade-in duration-200"
+    >
+      <!-- Backdrop click listener -->
+      <button
+        type="button"
+        (click)="closeSearchOverlay()"
+        class="absolute inset-0 w-full h-full cursor-default bg-transparent border-0 p-0"
+        aria-label="Close search overlay"
+      ></button>
+
+      <div
+        class="relative w-full max-w-3xl bg-white dark:bg-dark-surface border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col z-10"
+      >
+        <!-- Top Input Bar -->
+        <div class="relative flex items-center border-b border-slate-200 dark:border-slate-800 p-4 sm:p-5">
+          <span class="material-symbols-outlined text-2xl text-slate-400 mr-3 shrink-0">
+            search
+          </span>
+          <input
+            #headerSearchInput
+            type="text"
+            [value]="headerSearchQuery()"
+            (input)="onHeaderSearchInput($any($event.target).value)"
+            (keydown.enter)="executeSearch()"
+            placeholder="TYPE TO SEARCH ARCHIVE (E.G. JEANS, HOODIE, BOMBER, UNIQLO)..."
+            class="w-full bg-transparent text-sm sm:text-base font-semibold uppercase tracking-wider text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:normal-case placeholder:tracking-normal focus:outline-none"
+          />
+          <div class="flex items-center gap-2 shrink-0 ml-2">
+            @if (headerSearchQuery().trim()) {
+              <button
+                type="button"
+                (click)="headerSearchQuery.set(''); onHeaderSearchInput('')"
+                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1"
+                title="Clear"
+              >
+                <span class="material-symbols-outlined text-lg">close</span>
+              </button>
+            }
+            <button
+              type="button"
+              (click)="closeSearchOverlay()"
+              class="hidden sm:inline-block px-2 py-0.5 text-[10px] uppercase font-mono font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+            >
+              ESC
+            </button>
+          </div>
+        </div>
+
+        <!-- Smart Autocomplete Suggestions or Trending Keywords Chips -->
+        @if (headerSearchSuggestions().length > 0) {
+          <div class="px-5 py-3 bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2 text-[11px]">
+            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] font-mono mr-1">SUGGESTED SEARCHES:</span>
+            @for (term of headerSearchSuggestions(); track term) {
+              <button
+                type="button"
+                (click)="applyHeaderSuggestion(term)"
+                class="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-sky-400 text-slate-800 dark:text-slate-200 hover:text-primary dark:hover:text-sky-300 uppercase text-xs font-bold tracking-wider cursor-pointer transition-colors inline-flex items-center gap-1.5 shadow-sm"
+              >
+                <span class="material-symbols-outlined text-xs text-slate-400">search</span>
+                <span>{{ term }}</span>
+              </button>
+            }
+          </div>
+        } @else if (!headerSearchQuery().trim()) {
+          <!-- Trending Keywords Chips -->
+          <div class="px-5 py-3 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2 text-[11px]">
+            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">TRENDING:</span>
+            @for (tag of popularSearchTags; track tag) {
+              <button
+                type="button"
+                (click)="applyHeaderSuggestion(tag)"
+                class="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-primary dark:hover:border-sky-400 uppercase text-[10px] font-bold tracking-wider cursor-pointer transition-colors"
+              >
+                {{ tag }}
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Live Results Body -->
+        <div class="max-h-[50vh] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/80">
+          @if (isSearching()) {
+            <div class="py-12 text-center text-slate-400 space-y-2">
+              <span class="w-6 h-6 border-2 border-primary dark:border-sky-400 border-t-transparent rounded-full animate-spin inline-block"></span>
+              <p class="text-xs uppercase tracking-wider">SEARCHING WEAREZ VAULT...</p>
+            </div>
+          } @else if (headerSearchQuery().trim() && searchResults().length === 0) {
+            <div class="py-12 text-center text-slate-400 space-y-2 px-4">
+              <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">search_off</span>
+              <p class="text-xs uppercase tracking-wider font-bold text-slate-600 dark:text-slate-300">
+                NO EXACT ARCHIVE SPECIMENS FOUND FOR "{{ headerSearchQuery() }}"
+              </p>
+              <p class="text-[11px] text-slate-400">
+                Press Enter to explore the full catalog or browse our curated drops.
+              </p>
+            </div>
+          } @else if (searchResults().length > 0) {
+            <div class="p-2 space-y-1">
+              @for (prod of searchResults(); track prod.id) {
+                <button
+                  type="button"
+                  (click)="onSelectSearchResult(prod)"
+                  class="w-full text-left group flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border-0 bg-transparent"
+                >
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-14 bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                      <img
+                        [src]="getProductImage(prod)"
+                        [alt]="prod.name"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div class="space-y-0.5">
+                      <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <span>{{ prod.brand.name }}</span>
+                        <span>•</span>
+                        <span>{{ prod.category.name }}</span>
+                      </div>
+                      <h4 class="text-xs sm:text-sm font-display font-semibold uppercase text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-sky-300 transition-colors line-clamp-1">
+                        {{ prod.name }}
+                      </h4>
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0 ml-4">
+                    <div class="font-display font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                      ${{ prod.basePrice }}
+                    </div>
+                    <span class="text-[10px] uppercase tracking-wider text-sky-600 dark:text-sky-400 font-bold group-hover:underline">
+                      VIEW PIECE →
+                    </span>
+                  </div>
+                </button>
+              }
+            </div>
+          } @else {
+            <!-- Empty query prompt -->
+            <div class="py-10 text-center text-slate-400 space-y-1">
+              <span class="material-symbols-outlined text-3xl opacity-50">travel_explore</span>
+              <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">
+                ENTER KEYWORD OR SELECT POPULAR SPECIMEN TAG TO SEARCH
+              </p>
+              <p class="text-[11px] text-slate-400">
+                Search across archival coats, hoodies, tailored denim, cargo, and atelier drops.
+              </p>
+            </div>
+          }
+        </div>
+
+        <!-- Bottom Footer Action -->
+        <div class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+          <span class="text-slate-400 text-[11px] font-mono hidden sm:inline">
+            TIP: PRESS <strong>ENTER</strong> FOR FULL CATALOG SEARCH
+          </span>
+          <button
+            type="button"
+            (click)="executeSearch()"
+            class="w-full sm:w-auto px-5 py-2.5 bg-primary hover:bg-primary-hover dark:bg-white dark:hover:bg-slate-200 text-white dark:text-primary text-xs uppercase tracking-wider font-bold transition-all shadow-md cursor-pointer ml-auto flex items-center justify-center gap-2"
+          >
+            <span>{{ headerSearchQuery().trim() ? 'VIEW ALL MATCHES IN CATALOG' : 'EXPLORE FULL CATALOG' }}</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 5. Luxury Minimalist Footer -->
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-12 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="space-y-3 md:col-span-2">
+          <span class="font-display font-semibold text-xl uppercase tracking-tight text-slate-950 dark:text-white">
+            WEAREZ MAISON
+          </span>
+          <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+            Architectural silhouettes and contemporary luxury engineered for the avant-garde. Handcrafted tactile artifacts engineered between Tokyo urban kineticism and Parisian couture salons.
+          </p>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <span class="font-bold text-[11px] uppercase tracking-wider text-slate-950 dark:text-white block">
+            Navigation
+          </span>
+          <ul class="space-y-1.5 text-slate-500 dark:text-slate-400">
+            <li><a routerLink="/" class="hover:text-primary dark:hover:text-white">Home</a></li>
+            <li><a routerLink="/products" class="hover:text-primary dark:hover:text-white">All Ready-to-Wear</a></li>
+            <li><a [routerLink]="['/products']" [queryParams]="{ gender: 'men' }" class="hover:text-primary dark:hover:text-white">Men's Collection</a></li>
+            <li><a [routerLink]="['/products']" [queryParams]="{ gender: 'women' }" class="hover:text-primary dark:hover:text-white">Women's Collection</a></li>
+            @if (auth.isAuthenticated()) {
+              <li><a routerLink="/profile" class="hover:text-primary dark:hover:text-white">Profile</a></li>
+            } @else {
+              <li><a routerLink="/auth/login" class="hover:text-primary dark:hover:text-white">Sign In</a></li>
+              <li><a routerLink="/auth/register" class="hover:text-primary dark:hover:text-white">Register</a></li>
+            }
+          </ul>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <span class="font-bold text-[11px] uppercase tracking-wider text-slate-950 dark:text-white block">
+            Security &amp; Legal
+          </span>
+          <ul class="space-y-1.5 text-slate-500 dark:text-slate-400">
+            <li><span>Privacy Policy</span></li>
+            <li><span>Archive Protocol Spec</span></li>
+            <li><span>GOTS Certified Textiles</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400"
+      >
+        <span>© 2026 WEAREZ Global Luxury Maison. All rights reserved. • 256-BIT ENCRYPTED MAISON VAULT</span>
+      </div>
+    </div>
+  </footer>
+</div>

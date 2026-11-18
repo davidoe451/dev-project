@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, RegisterResponse, User } from '../models/user.model';
+export { User };
 
 export interface RegisterDto {
   email: string;
@@ -83,6 +84,29 @@ export class AuthService {
         }
       }),
     );
+  }
+
+  updateProfile(dto: Partial<User>): Observable<User> {
+    const current = this.currentUser();
+    const updated: User = {
+      ...(current || { id: 1, email: '', isActive: true, roleId: 1 }),
+      ...dto,
+    };
+    localStorage.setItem('user', JSON.stringify(updated));
+    this.currentUser.set(updated);
+    return this.http.patch<User>(`${environment.apiUrl}/users/profile`, dto).pipe(
+      tap((serverUser) => {
+        if (serverUser) {
+          const finalUser = { ...updated, ...serverUser };
+          localStorage.setItem('user', JSON.stringify(finalUser));
+          this.currentUser.set(finalUser);
+        }
+      }),
+    );
+  }
+
+  changePassword(dto: { currentPassword?: string; newPassword?: string }): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.apiUrl}/change-password`, dto);
   }
 
   promptLogout(): void {

@@ -1,0 +1,452 @@
+<div class="flex flex-col w-full selection:bg-primary selection:text-white pb-20">
+  @if (usingSampleData()) {
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4">
+      <app-alert variant="warning" title="Catalog preview">Some products are sample data while the live catalog is unavailable.</app-alert>
+    </div>
+  }
+  <!-- Quick Add Notification Banner -->
+  @if (quickAddNotice()) {
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4">
+      <app-alert variant="info">
+        <div class="flex items-center justify-between gap-4 w-full">
+          <span>{{ quickAddNotice() }}</span>
+          <app-button variant="ghost" size="sm" (click)="quickAddNotice.set(null)">Dismiss</app-button>
+        </div>
+      </app-alert>
+    </div>
+  }
+
+  <!-- 1. HERO SECTION: ARCHITECTURAL HIGH FASHION RUNWAY HERO -->
+  <section
+    class="relative w-full overflow-hidden bg-slate-900 text-white min-h-[85vh] lg:min-h-[92vh] flex flex-col justify-end"
+  >
+    <!-- Background Ambient Architectural Imagery -->
+    <div
+      class="absolute inset-0 bg-cover bg-center brightness-[0.88] transition-transform duration-1000 ease-out scale-100 hover:scale-102"
+      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFvdYYaJp8JXYPmTo3YYZBL4vdPXkrgmxOKwEUV-FVx1GD6rK9IYVzrOkDPRALv94ihulYdNIdA3F84wf9I4OK-O_QAuyth-fb2HP8MwdZe0vW5D4dl8gWs8lLf-PhUYEqmoslcvJk3Dn6Qjs5gL5DJxY0cgaJwTkFON-HP0z-t-jTeQeTwvl2n1D3tc5luJvLT7NJOmwHltWobH9WaEV-F-d0BWsmEQuMTV0OKQaQ4Mkzv_S7eoCl')"
+    ></div>
+
+    <!-- Scrim & Linear Editorial Contrast Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0a111a] via-[#0a111a]/40 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#0a111a]/80 via-transparent to-transparent"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12 pt-28">
+      <!-- Top Capsule Identifier Badge -->
+      <div class="flex items-center justify-between gap-4 mb-6">
+        <div
+          class="flex items-center gap-2 bg-primary/90 backdrop-blur-md px-3.5 py-1 text-white border border-white/10 shadow-sm"
+        >
+          <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+          <span class="text-[10px] sm:text-xs uppercase tracking-widest font-bold">
+            CAPSULE 04 • AUTUMN / WINTER 2026
+          </span>
+        </div>
+        <div
+          class="hidden md:flex items-center gap-3 text-xs text-slate-300 uppercase tracking-widest bg-black/40 backdrop-blur-md px-3 py-1 border border-white/10"
+        >
+          <span>PARIS RUNWAY ARCHIVE</span>
+          <span>//</span>
+          <span>EDITION 001</span>
+        </div>
+      </div>
+
+      <!-- Main Typographic Composition -->
+      <div class="max-w-3xl space-y-4">
+        <span class="text-xs tracking-[0.25em] text-sky-300 uppercase font-bold block">
+          ARCHITECTURAL MONOCHROME
+        </span>
+        <h1
+          class="font-display text-4xl sm:text-6xl lg:text-7xl uppercase text-white tracking-tight leading-[1.05] select-none"
+        >
+          REDEFINING <br />
+          <span class="italic font-normal text-sky-200">CONTEMPORARY</span> <br />
+          LUXURY.
+        </h1>
+        <p class="text-sm sm:text-base text-slate-300 max-w-xl font-light leading-relaxed">
+          Tactile heavyweight garments engineered with brutalist silhouettes, custom-milled Portuguese fleece, and architectural tailoring for cross-continental kineticism.
+        </p>
+
+        <!-- CTA Interactions -->
+        <div class="pt-4 flex flex-wrap items-center gap-4">
+          <a routerLink="/products">
+            <app-button size="lg" class="shadow-xl">
+              <span>EXPLORE CAPSULE 04</span>
+              <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
+            </app-button>
+          </a>
+          <a routerLink="/" fragment="manifesto">
+            <app-button variant="outline" size="lg" class="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white hover:text-slate-900">
+              <span class="material-symbols-outlined text-base mr-1">play_circle</span>
+              <span>VIEW LOOKBOOK FILM</span>
+            </app-button>
+          </a>
+        </div>
+      </div>
+
+      <!-- Key Craftsmanship Metas -->
+      <div
+        class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/15 bg-black/40 backdrop-blur-md p-4 sm:p-6"
+      >
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase tracking-widest font-bold text-sky-300 font-mono">PRODUCTION SCARCITY</span>
+          <span class="text-xs sm:text-sm text-white uppercase font-bold mt-1">LIMITED RUN OF 300 PIECES</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase tracking-widest font-bold text-sky-300 font-mono">ATELIER ORIGIN</span>
+          <span class="text-xs sm:text-sm text-white uppercase font-bold mt-1">HANDCRAFTED IN PORTUGAL</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] uppercase tracking-widest font-bold text-sky-300 font-mono">MATTER SPECIFICATION</span>
+          <span class="text-xs sm:text-sm text-white uppercase font-bold mt-1">100% HEAVYWEIGHT ORGANIC COTTON</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. MARQUEE STATEMENT STRIP (Navy #16263A) -->
+  <div
+    class="w-full bg-primary text-white py-3 px-4 sm:px-8 border-y border-navy-border overflow-hidden select-none"
+  >
+    <div
+      class="max-w-7xl mx-auto flex items-center justify-between text-center gap-6 whitespace-nowrap text-[11px] uppercase tracking-widest"
+    >
+      <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm text-sky-300">verified</span>
+        NATIVE PROVENANCE NFC CHIP EMBEDDED
+      </span>
+      <span class="hidden md:inline text-white/30">•</span>
+      <span class="hidden md:flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm text-sky-300">flare</span>
+        LIMITED CAPSULE NUMERATION 001 - 300
+      </span>
+      <span class="hidden lg:inline text-white/30">•</span>
+      <span class="hidden lg:flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm text-sky-300">inventory_2</span>
+        COMPLIMENTARY EXPRESS ARMORED SHIPPING
+      </span>
+    </div>
+  </div>
+
+  <!-- 3. CURATED DROPS (ARCHIVE ACQUISITIONS) -->
+  <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24" id="curated-drops">
+    <!-- Header with Tab Toggles -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-3 h-0.5 bg-primary dark:bg-sky-400"></span>
+          <span class="text-xs uppercase tracking-widest text-primary dark:text-sky-300 font-bold">
+            ARCHIVE ACQUISITIONS
+          </span>
+        </div>
+        <h2 class="font-display text-3xl sm:text-4xl uppercase text-slate-950 dark:text-white tracking-tight">
+          CURATED DROPS
+        </h2>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap items-center gap-1.5 bg-slate-100 dark:bg-slate-900 p-1">
+        @for (tab of categoryTabs; track tab.key) {
+          <app-button
+            [variant]="selectedCategory() === tab.key ? 'primary' : 'ghost'"
+            size="sm"
+            (click)="onCategoryTabChange(tab.key)"
+          >
+            {{ tab.label }}
+          </app-button>
+        }
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-24 gap-3">
+        <app-spinner size="lg" />
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">
+          QUERYING VAULT INVENTORY...
+        </span>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (item of curatedProducts(); track item.id) {
+          <div
+            class="group relative flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-primary/40 dark:hover:border-slate-600"
+          >
+            <!-- Image with 4:5 aspect ratio -->
+            <div class="relative w-full aspect-4/5 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <a [routerLink]="['/products', item.slug]" class="block w-full h-full">
+                <img
+                  [src]="getPrimaryImage(item)"
+                  [alt]="item.name"
+                  class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
+                />
+              </a>
+
+              <!-- Card Badges -->
+              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start z-10 pointer-events-none">
+                @if (getTotalStock(item) <= 0) {
+                  <app-badge variant="destructive" size="sm">OUT OF STOCK</app-badge>
+                } @else if (getTotalStock(item) <= 6) {
+                  <app-badge variant="warning" size="sm">ONLY {{ getTotalStock(item) }} LEFT</app-badge>
+                } @else {
+                  <app-badge variant="default" size="sm">{{ item.brand.name }}</app-badge>
+                }
+                <span class="bg-white/90 dark:bg-slate-900/90 backdrop-blur text-slate-900 dark:text-white text-[9px] px-2 py-0.5 uppercase tracking-wider font-mono">
+                  CAPSULE 04
+                </span>
+              </div>
+
+              <!-- Slide-up Quick Add Drawer on hover -->
+              <div
+                class="absolute bottom-0 left-0 right-0 p-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-2 z-20 border-t border-slate-200 dark:border-slate-800"
+              >
+                @if (getTotalStock(item) > 0) {
+                  <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider">
+                    <span>QUICK SELECT SIZE</span>
+                    <a [routerLink]="['/products', item.slug]" class="text-primary dark:text-sky-300 hover:underline">
+                      SPEC SHEET
+                    </a>
+                  </div>
+                  <div class="grid grid-cols-5 gap-1 text-center text-xs">
+                    @for (sz of ['S', 'M', 'L', 'XL', '42']; track sz) {
+                      <button
+                        type="button"
+                        (click)="quickAdd(item, sz)"
+                        class="py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white dark:hover:bg-white dark:hover:text-primary transition-colors font-bold text-[11px] cursor-pointer"
+                      >
+                        {{ sz }}
+                      </button>
+                    }
+                  </div>
+                  <a [routerLink]="['/products', item.slug]" class="w-full">
+                    <app-button size="sm" [fullWidth]="true">
+                      VIEW PIECE • ${{ item.basePrice }}
+                    </app-button>
+                  </a>
+                } @else {
+                  <div class="py-2.5 bg-rose-950/90 text-rose-300 text-center text-xs uppercase tracking-widest font-bold border border-rose-800 flex items-center justify-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">block</span>
+                    <span>ARCHIVE DEPLETED</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="pt-3 px-1 pb-1 flex flex-col justify-between flex-grow space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-[10px] text-slate-400 font-mono uppercase tracking-wider block">
+                    {{ item.brand.name }} • {{ item.category.name }}
+                  </span>
+                  <a
+                    [routerLink]="['/products', item.slug]"
+                    class="text-xs sm:text-sm font-semibold tracking-tight uppercase text-slate-950 dark:text-white hover:text-primary dark:hover:text-sky-300 transition-colors line-clamp-1 block"
+                    [title]="item.name"
+                  >
+                    {{ item.name }}
+                  </a>
+                </div>
+                <span class="text-sm font-bold text-slate-900 dark:text-white whitespace-nowrap">
+                  {{ item.basePrice | currency: 'USD' : 'symbol' : '1.0-0' }}
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-400">
+                <div class="flex items-center gap-1.5">
+                  @for (col of getUniqueColors(item); track col.name) {
+                    <span
+                      class="w-2.5 h-2.5 inline-block border border-slate-300 dark:border-slate-700"
+                      [style.backgroundColor]="col.hex"
+                      [title]="col.name"
+                    ></span>
+                  }
+                </div>
+                <span class="uppercase tracking-wider font-mono">
+                  {{ item.variants.length }} SKUs
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Collection Progress & View All Footnote -->
+    <div
+      class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-900/60 p-4 border border-slate-200/80 dark:border-slate-800"
+    >
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <span class="text-xs text-slate-900 dark:text-white uppercase font-bold tracking-wider font-mono">
+          CAPSULE 04 DISPATCH STATUS
+        </span>
+        <div class="w-32 h-1.5 bg-slate-200 dark:bg-slate-800 relative overflow-hidden hidden md:block">
+          <div class="absolute left-0 top-0 bottom-0 w-3/4 bg-primary dark:bg-sky-400"></div>
+        </div>
+        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-mono"> 74% RESERVED GLOBALLY </span>
+      </div>
+
+      <a routerLink="/products" class="flex items-center gap-1">
+        <app-button variant="outline" size="sm">
+          <span>EXPLORE ENTIRE ARCHIVE</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </app-button>
+      </a>
+    </div>
+  </section>
+
+  <!-- 4. EDITORIAL FEATURE / CAMPAIGN SPOTLIGHT & MANIFESTO -->
+  <section
+    class="w-full bg-slate-50 dark:bg-dark-bg py-16 sm:py-24 border-y border-slate-200/80 dark:border-slate-800"
+    id="manifesto"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Tagline -->
+      <div class="flex items-center gap-4 mb-8">
+        <span class="text-xs uppercase tracking-widest text-primary dark:text-sky-300 font-bold font-mono">
+          03 // EDITORIAL CAMPAIGN SPOTLIGHT
+        </span>
+        <div class="h-px flex-grow bg-slate-200 dark:border-slate-800"></div>
+      </div>
+
+      <!-- Split-screen Magazine Layout -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch">
+        <!-- Left: Full Editorial Portrait & Manifesto -->
+        <div
+          class="xl:col-span-7 flex flex-col justify-between bg-white dark:bg-slate-900 p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm"
+        >
+          <div class="space-y-4">
+            <span class="text-xs tracking-widest text-primary dark:text-sky-300 uppercase font-bold block font-mono">
+              THE WEAREZ PHILOSOPHY
+            </span>
+            <h2
+              class="font-display text-3xl sm:text-5xl text-slate-950 dark:text-white uppercase tracking-tight leading-[1.08]"
+            >
+              THE MANIFESTO: <br />
+              <span class="italic font-normal text-primary dark:text-sky-300">LUXURY WITHOUT</span> <br />
+              COMPROMISE.
+            </h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 max-w-xl font-light leading-relaxed">
+              We reject transient hyper-trends and disposable garments. WEAREZ operates as an architectural laboratory: calculating drape, stress tension, and silhouette longevity to create wearable sculpture for the youth vanguard.
+            </p>
+          </div>
+
+          <!-- Feature Image with Overlay Metric -->
+          <div class="relative w-full aspect-16/9 mt-8 overflow-hidden bg-slate-100 dark:bg-slate-800">
+            <img
+              class="w-full h-full object-cover object-center"
+              alt="Editorial manifesto lookbook"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiOzsvAxlHrZEdBDCXoehIyRmNLtsHPLLYeM3B3jUMZQ4eoraeD7WOgrWxmGGjkLfx0lHo5lzbDOXR_ur5ABfxQy5b-KbcjRBtpu56FztXjYwXHgLv3AyM4mGcznm9YBPBL29ZpaZI0o9DhhDx5X53bi6kWXeKbBobQ36d6tP2emKTtld-kOIgq6Zu9ygQBlx9cZesZpuMBMlag4oeXKdwlR3-rZKe4Sws-Xd6yAGBED3VnmgRFLEP"
+            />
+            <div
+              class="absolute bottom-3 left-3 bg-primary/90 backdrop-blur-md px-3 py-1 text-white text-[10px] uppercase tracking-widest font-bold font-mono"
+            >
+              PARIS ARCHIVE PROTOCOL // VOL. 04
+            </div>
+          </div>
+
+          <!-- Quote & Attribution -->
+          <div
+            class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4"
+          >
+            <p class="font-display italic text-sm sm:text-base text-slate-800 dark:text-slate-200 tracking-tight">
+              “Form does not simply follow function—it defines cultural sovereignty.”
+            </p>
+            <span class="text-[10px] uppercase text-slate-400 tracking-widest whitespace-nowrap font-mono">
+              ATELIER DIRECTORS
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Tactile Fabric Close-up & Certified Badges -->
+        <div class="xl:col-span-5 flex flex-col justify-between gap-6">
+          <!-- Tactile Fabric Card -->
+          <div
+            class="bg-white dark:bg-slate-900 p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col flex-grow"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs text-primary dark:text-sky-300 uppercase font-bold tracking-widest font-mono">
+                TACTILE ANALYSIS 4K
+              </span>
+              <span class="material-symbols-outlined text-primary dark:text-sky-300 text-xl">zoom_in</span>
+            </div>
+
+            <div
+              class="relative w-full aspect-4/3 bg-slate-100 dark:bg-slate-800 overflow-hidden mb-4 group cursor-crosshair"
+            >
+              <img
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
+                alt="Macro fabric texture"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGxsdR5Ejbpz2rL03VKK7LvgYQUG3jpl3Jr6Pa0Kvx_GiDDdrvmczFm3QVJHZ8iFRxaPSs94TMIG3pyLwdYEH0notx4LGMzUyxgDfDWf7U3Io12z2HGWHxacaAT27IQawPG3rP8ZShnL5cFw1f6fN4sMYpQyhox5GaMR2rXcyCydTwIBsKjtxifiIRK3UKfNfvyP5bWOkfVmiFxiUd-HnOUyfPqsYV0oqxsdXEJcdi0el1PCGS4k5l"
+              />
+              <div
+                class="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-0.5 text-[9px] uppercase tracking-wider font-mono"
+              >
+                HOVER TO MAGNIFY FIBER
+              </div>
+            </div>
+
+            <h3 class="font-display text-lg uppercase text-slate-950 dark:text-white font-semibold">
+              CUSTOM MILLED 480GSM TEXTILES
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+              Milled in limited batches exclusively in northern Portugal and Biella, Italy. Unbrushed reverse loops allow zero-shrink thermal regulation with perpetual structural memory.
+            </p>
+
+            <!-- Specification Table -->
+            <div class="mt-4 grid grid-cols-2 gap-2 text-[10px] uppercase pt-2">
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span class="text-slate-400 block font-mono">WEIGHT</span>
+                <span class="font-bold text-slate-900 dark:text-white">480 GSM LOOPBACK</span>
+              </div>
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span class="text-slate-400 block font-mono">YARN</span>
+                <span class="font-bold text-slate-900 dark:text-white">DOUBLE-TWIST COMBED</span>
+              </div>
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span class="text-slate-400 block font-mono">DYE METHOD</span>
+                <span class="font-bold text-slate-900 dark:text-white">PIGMENT INFUSION</span>
+              </div>
+              <div class="bg-slate-50 dark:bg-slate-800/60 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span class="text-slate-400 block font-mono">ORIGIN</span>
+                <span class="font-bold text-slate-900 dark:text-white">PORTO, PORTUGAL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sustainable Certifications -->
+          <div class="bg-white dark:bg-slate-900 p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <span
+              class="text-[11px] uppercase tracking-widest text-primary dark:text-sky-300 font-bold block mb-3 font-mono"
+            >
+              CIRCULARITY &amp; PROVENANCE
+            </span>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div
+                class="bg-slate-50 dark:bg-slate-800/60 p-3 flex flex-col items-center justify-center gap-1 border border-slate-200/60 dark:border-slate-700"
+              >
+                <span class="material-symbols-outlined text-primary dark:text-sky-300 text-xl">eco</span>
+                <span class="text-[10px] font-bold text-slate-900 dark:text-white uppercase">GOTS 100%</span>
+                <span class="text-[9px] text-slate-400 uppercase">Organic Cotton</span>
+              </div>
+              <div
+                class="bg-slate-50 dark:bg-slate-800/60 p-3 flex flex-col items-center justify-center gap-1 border border-slate-200/60 dark:border-slate-700"
+              >
+                <span class="material-symbols-outlined text-primary dark:text-sky-300 text-xl">verified</span>
+                <span class="text-[10px] font-bold text-slate-900 dark:text-white uppercase">OEKO-TEX 100</span>
+                <span class="text-[9px] text-slate-400 uppercase">Class I Standard</span>
+              </div>
+              <div
+                class="bg-slate-50 dark:bg-slate-800/60 p-3 flex flex-col items-center justify-center gap-1 border border-slate-200/60 dark:border-slate-700"
+              >
+                <span class="material-symbols-outlined text-primary dark:text-sky-300 text-xl">recycling</span>
+                <span class="text-[10px] font-bold text-slate-900 dark:text-white uppercase">CIRCULAR</span>
+                <span class="text-[9px] text-slate-400 uppercase">Zero Microplastics</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -3,7 +3,7 @@ import { authGuard } from '@core/guards/auth.guard';
 import { adminGuard } from '@core/guards/admin.guard';
 
 export const routes: Routes = [
-  // 1. Main Client Layout (Sprint 1: Home & Client Profile)
+  // 1. Main Client Layout (Sprint 1 & Sprint 2: Home, Catalog, Product Details, Profile, Admin)
   {
     path: '',
     loadComponent: () =>
@@ -16,6 +16,27 @@ export const routes: Routes = [
           import('@features/home/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
       },
       {
+        path: 'products',
+        title: 'Catalog | WEAREZ',
+        loadComponent: () =>
+          import('@features/products/pages/product-list-page/product-list-page.component').then(
+            (m) => m.ProductListPageComponent,
+          ),
+      },
+      {
+        path: 'products/:id',
+        title: 'Product Detail | WEAREZ',
+        loadComponent: () =>
+          import('@features/products/pages/product-detail-page/product-detail-page.component').then(
+            (m) => m.ProductDetailPageComponent,
+          ),
+      },
+      {
+        path: 'catalog',
+        redirectTo: 'products',
+        pathMatch: 'full',
+      },
+      {
         path: 'profile',
         title: 'Client Profile | WEAREZ',
         canActivate: [authGuard],
@@ -24,17 +45,23 @@ export const routes: Routes = [
       },
       {
         path: 'admin/customers',
-        title: 'Customer Accounts | WEAREZ',
-        canActivate: [adminGuard],
-        loadComponent: () =>
-          import('@features/admin/pages/customers-page/customers-page.component').then(
-            (m) => m.CustomersPageComponent,
-          ),
+        redirectTo: '/admin/users',
+        pathMatch: 'full',
       },
     ],
   },
 
-  // 2. Auth Flow (Login & Register)
+  // 2. Admin Layout & Management Console (Sprint 2 - Dev B & Admin Scope)
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('@layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
+    loadChildren: () =>
+      import('@features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+  },
+
+  // 3. Auth Flow (Login & Register)
   {
     path: 'auth',
     loadComponent: () =>

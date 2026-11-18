@@ -1,0 +1,108 @@
+<section id="reviews-section" class="space-y-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <p class="text-[11px] uppercase tracking-[0.2em] text-primary dark:text-sky-300 font-bold">CLIENT CRITIQUES</p>
+      <h2 class="font-display text-2xl sm:text-4xl uppercase text-slate-950 dark:text-white mt-1">Atelier Ratings &amp; Reviews</h2>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-2xl">Independent reviews submitted exclusively by verified purchasers of this archive edition.</p>
+    </div>
+    <app-button variant="primary" size="md" (click)="state().toggleWriteReview()">
+      <span class="material-symbols-outlined text-base">{{ state().isWritingReview() ? 'close' : 'rate_review' }}</span>
+      <span>{{ state().isWritingReview() ? 'Close Review Form' : 'Write a Review' }}</span>
+    </app-button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+    <app-card padding="default" class="lg:col-span-4 flex flex-col items-center justify-center text-center space-y-3">
+      <div class="flex items-end gap-2"><span class="font-display text-5xl text-slate-950 dark:text-white">{{ state().averageRating() }}</span><span class="text-sm text-slate-400 mb-1">/ 5</span></div>
+      <div class="flex items-center text-amber-500">
+        @for (star of [1, 2, 3, 4, 5]; track star) { <span class="material-symbols-outlined text-lg">{{ star <= state().averageRatingNum() ? 'star' : 'star_border' }}</span> }
+      </div>
+      <p class="text-[10px] uppercase tracking-widest text-slate-500 font-mono">Based on {{ state().reviews().length }} verified assessments</p>
+    </app-card>
+
+    <app-card padding="default" class="lg:col-span-5 space-y-2">
+      <h3 class="text-xs uppercase tracking-wider font-bold text-slate-800 dark:text-slate-200 mb-3">Rating distribution</h3>
+      @for (bar of state().ratingDistribution(); track bar.stars) {
+        <button type="button" class="w-full grid grid-cols-[3rem_1fr_2rem] items-center gap-2 text-xs" (click)="state().activeStarFilter.set(bar.stars)">
+          <span class="flex items-center gap-1 text-amber-500">{{ bar.stars }} <span class="material-symbols-outlined text-xs">star</span></span>
+          <span class="h-2 bg-slate-100 dark:bg-slate-800 overflow-hidden"><span class="block h-full bg-primary dark:bg-sky-400" [style.width.%]="bar.percentage"></span></span>
+          <span class="text-right font-mono text-slate-500">{{ bar.count }}</span>
+        </button>
+      }
+    </app-card>
+
+    <app-card padding="default" class="lg:col-span-3 flex flex-col justify-center gap-3">
+      @if (state().userHasPurchased()) {
+        <div class="space-y-2">
+          <div class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-[10px] uppercase font-bold tracking-widest"><span class="material-symbols-outlined text-xs">verified_user</span>VERIFIED PATRON</div>
+          <h4 class="font-display text-sm uppercase font-bold text-slate-900 dark:text-white">Record Confirmed</h4>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Your feedback directly helps fellow patrons calibrate sizing, drape, and material nuances.</p>
+        </div>
+        @if (!state().isWritingReview()) { <app-button variant="outline" size="sm" [fullWidth]="true" (click)="state().isWritingReview.set(true)">Add Your Critique</app-button> }
+      } @else {
+        <p class="text-xs text-slate-600 dark:text-slate-400">Purchase verification is required to submit a review.</p>
+      }
+    </app-card>
+  </div>
+
+  @if (state().reviewSuccess()) {
+    <app-alert variant="success" [dismissible]="true" (dismiss)="state().reviewSuccess.set('')">{{ state().reviewSuccess() }}</app-alert>
+  }
+
+  @if (state().isWritingReview()) {
+    <app-card padding="lg" class="space-y-6 border-2 border-primary/40 dark:border-sky-500/40">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex items-center justify-between">
+        <div><span class="text-[10px] uppercase tracking-widest font-mono text-primary dark:text-sky-300 font-bold">Verified Patron Intake</span><h3 class="font-display text-xl uppercase font-bold text-slate-900 dark:text-white">Submit Atelier Critique &amp; Rating</h3></div>
+        <button type="button" (click)="state().isWritingReview.set(false)" class="text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs uppercase tracking-wider cursor-pointer">Close</button>
+      </div>
+      @if (state().reviewError()) { <app-alert variant="destructive" [dismissible]="true" (dismiss)="state().reviewError.set('')">{{ state().reviewError() }}</app-alert> }
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Star Rating Assessment</span>
+          <div class="flex items-center gap-2"><div class="flex items-center gap-1 text-amber-500">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <button type="button" (click)="state().reviewRating.set(star)" class="p-1 hover:scale-125 transition-transform cursor-pointer" [attr.aria-label]="star + ' stars'"><span class="material-symbols-outlined text-2xl" [class.fill-current]="star <= state().reviewRating()">{{ star <= state().reviewRating() ? 'star' : 'star_border' }}</span></button>
+            }
+          </div><span class="text-xs uppercase font-bold text-slate-700 dark:text-slate-300 font-mono ml-2">{{ state().reviewRating() }}/5</span></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <label class="space-y-2"><span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Size purchased</span><select [value]="state().reviewSize()" (change)="state().reviewSize.set($any($event.target).value)" class="w-full px-3 py-2 text-xs uppercase font-mono bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white"><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option></select></label>
+          <label class="space-y-2"><span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Fit assessment</span><select [value]="state().reviewFit()" (change)="state().reviewFit.set($any($event.target).value)" class="w-full px-3 py-2 text-xs uppercase font-mono bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white"><option value="TRUE TO ARCHIVE CUT">TRUE TO CUT</option><option>OVERSIZED DRAPE</option><option>STRUCTURED / FITTED</option></select></label>
+        </div>
+      </div>
+      <label class="block space-y-2"><span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Critique headline</span><input type="text" [value]="state().reviewHeadline()" (input)="state().reviewHeadline.set($any($event.target).value)" placeholder="e.g. Sculptural drape and unmatched fabric density" class="w-full px-3 py-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white" /></label>
+      <label class="block space-y-2"><span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Detailed critique</span><textarea rows="4" [value]="state().reviewComment()" (input)="state().reviewComment.set($any($event.target).value)" placeholder="Share your impressions of fabric, fit, and finishing..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white"></textarea></label>
+      <label class="block space-y-2 max-w-sm"><span class="block text-xs uppercase tracking-wider font-bold text-slate-900 dark:text-white">Patron name (optional)</span><input type="text" [value]="state().reviewAuthorName()" (input)="state().reviewAuthorName.set($any($event.target).value)" placeholder="Leave blank to display Verified Patron" class="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-mono" /></label>
+      <div class="flex items-center gap-4 pt-2"><app-button variant="primary" size="md" (click)="state().submitReview()">Publish Critique</app-button><app-button variant="outline" size="md" (click)="state().isWritingReview.set(false)">Cancel</app-button></div>
+    </app-card>
+  }
+
+  <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" (click)="state().activeStarFilter.set(0)" [class.bg-primary]="state().activeStarFilter() === 0" [class.text-white]="state().activeStarFilter() === 0" [class.bg-slate-100]="state().activeStarFilter() !== 0" [class.dark:bg-slate-800]="state().activeStarFilter() !== 0" [class.text-slate-700]="state().activeStarFilter() !== 0" [class.dark:text-slate-300]="state().activeStarFilter() !== 0" class="px-3 py-1.5 text-xs uppercase tracking-wider font-bold cursor-pointer">All Critiques ({{ state().reviews().length }})</button>
+      @for (star of [5, 4, 3]; track star) {
+        <button type="button" (click)="state().activeStarFilter.set(star)" [class.bg-primary]="state().activeStarFilter() === star" [class.text-white]="state().activeStarFilter() === star" [class.bg-slate-100]="state().activeStarFilter() !== star" [class.dark:bg-slate-800]="state().activeStarFilter() !== star" [class.text-slate-700]="state().activeStarFilter() !== star" [class.dark:text-slate-300]="state().activeStarFilter() !== star" class="px-3 py-1.5 text-xs uppercase tracking-wider font-bold cursor-pointer flex items-center gap-1"><span>{{ star }} Stars</span><span class="font-mono text-[10px] opacity-75">({{ countByRating(star) }})</span></button>
+      }
+    </div>
+    <div class="text-xs uppercase tracking-wider text-slate-500 font-mono">Showing {{ state().filteredReviews().length }} of {{ state().reviews().length }} reviews</div>
+  </div>
+
+  <div class="space-y-6 divide-y divide-slate-200 dark:divide-slate-800">
+    @if (state().filteredReviews().length === 0) {
+      <div class="py-12 text-center text-xs uppercase tracking-widest text-slate-400 font-mono">No reviews match this rating filter.</div>
+    } @else {
+      @for (review of state().filteredReviews(); track review.id) {
+        <article class="pt-6 flex flex-col gap-3 group">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3"><div class="w-9 h-9 bg-primary text-white flex items-center justify-center font-bold text-xs uppercase tracking-wider rounded-xs">{{ review.avatarLetter }}</div><div><div class="flex items-center gap-2"><span class="font-bold text-xs sm:text-sm uppercase text-slate-950 dark:text-white tracking-wider">{{ review.authorName }}</span>@if (review.isVerifiedBuyer) { <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-800 text-[9px] uppercase font-bold tracking-wider text-emerald-800 dark:text-emerald-300"><span class="material-symbols-outlined text-[11px]">verified</span><span>Verified Patron</span></span> }</div><div class="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400">{{ review.createdAt }}</div></div></div>
+            <div class="flex items-center gap-1 text-amber-500">@for (star of [1, 2, 3, 4, 5]; track star) { <span class="material-symbols-outlined text-base fill-current">{{ star <= review.rating ? 'star' : 'star_border' }}</span> }</div>
+          </div>
+          <div class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 pt-1"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-slate-800 dark:text-slate-200 font-semibold">Size: {{ review.sizePurchased }}</span><span>•</span><span>Fit: {{ review.fitFeedback }}</span></div>
+          <h4 class="font-sans text-sm sm:text-base uppercase font-semibold text-slate-950 dark:text-white tracking-wide pt-1">{{ review.headline }}</h4>
+          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-light leading-relaxed">{{ review.comment }}</p>
+          <div class="flex items-center gap-4 pt-2"><button type="button" (click)="state().voteHelpful(review)" [class.text-primary]="review.userVotedHelpful" [class.dark:text-sky-300]="review.userVotedHelpful" [class.font-bold]="review.userVotedHelpful" class="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer"><span class="material-symbols-outlined text-sm" [class.fill-current]="review.userVotedHelpful">thumb_up</span><span>Helpful ({{ review.helpfulCount }})</span></button><span class="text-xs text-slate-300 dark:text-slate-700">|</span><span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Atelier Verified</span></div>
+        </article>
+      }
+    }
+  </div>
+</section>

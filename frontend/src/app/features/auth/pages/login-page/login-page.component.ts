@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { AppButtonComponent, AppInputComponent, AppSpinnerComponent } from '@shared/ui';
+import {
+  AppAlertComponent,
+  AppButtonComponent,
+  AppInputComponent,
+  AppSpinnerComponent,
+} from '@shared/ui';
 
 @Component({
   selector: 'app-login-page',
@@ -10,112 +15,12 @@ import { AppButtonComponent, AppInputComponent, AppSpinnerComponent } from '@sha
   imports: [
     RouterLink,
     ReactiveFormsModule,
+    AppAlertComponent,
     AppButtonComponent,
     AppInputComponent,
     AppSpinnerComponent,
   ],
-  template: `
-    <div class="space-y-6">
-      <!-- Header -->
-      <div class="space-y-1">
-        <span class="text-[10px] uppercase tracking-[0.25em] text-primary dark:text-sky-300 font-bold block">
-          VAULT AUTHENTICATION
-        </span>
-        <h2 class="font-display text-2xl sm:text-3xl uppercase tracking-tight text-slate-950 dark:text-white">
-          Sign In
-        </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 font-light">
-          Sign in to access your WEAREZ account
-        </p>
-      </div>
-
-      <!-- Error Alert -->
-      @if (errorMessage()) {
-        <div
-          class="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-300 flex items-start gap-2.5"
-        >
-          <span class="material-symbols-outlined text-base text-rose-600 dark:text-rose-400 mt-0.5">error</span>
-          <div class="flex-1 font-medium leading-relaxed">
-            {{ errorMessage() }}
-          </div>
-        </div>
-      }
-
-      <!-- Form -->
-      <form class="space-y-4 pt-1" [formGroup]="form" (ngSubmit)="onSubmit()">
-        <!-- Email Input -->
-        <app-input
-          id="loginEmail"
-          type="email"
-          label="Email Address"
-          [required]="true"
-          formControlName="email"
-          placeholder="e.g. client@example.com"
-          autocomplete="email"
-          [error]="emailError()"
-        />
-
-        <!-- Password Input with Toggle Suffix -->
-        <app-input
-          id="loginPassword"
-          [type]="showPassword() ? 'text' : 'password'"
-          label="Password"
-          [required]="true"
-          formControlName="password"
-          placeholder="Enter your password"
-          autocomplete="current-password"
-          [hasSuffix]="true"
-          [error]="passwordError()"
-        >
-          <app-button
-            suffix
-            type="button"
-            variant="ghost"
-            size="icon"
-            (click)="showPassword.set(!showPassword())"
-            [class]="'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1'"
-            [ariaLabel]="showPassword() ? 'Hide password' : 'Show password'"
-          >
-            <span class="material-symbols-outlined text-base">
-              {{ showPassword() ? 'visibility_off' : 'visibility' }}
-            </span>
-          </app-button>
-        </app-input>
-
-        <!-- Submit Button -->
-        <div class="pt-2">
-          <app-button
-            type="submit"
-            size="lg"
-            [fullWidth]="true"
-            [disabled]="isLoading()"
-            [class]="'shadow-md shadow-primary/20'"
-          >
-            @if (isLoading()) {
-              <app-spinner size="sm" class="mr-2" />
-              <span>AUTHENTICATING...</span>
-            } @else {
-              <span>Sign In</span>
-              <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
-            }
-          </app-button>
-        </div>
-      </form>
-
-      <!-- Switch to Register -->
-      <div
-        class="pt-4 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400"
-      >
-        Don't have an account?
-        <a
-          routerLink="/auth/register"
-          class="font-bold text-primary dark:text-sky-300 hover:underline ml-1 uppercase tracking-wider"
-        >
-          Create an account
-        </a>
-      </div>
-    </div>
-  `,
+  templateUrl: './login-page.component.html',
   styles: [
     `
       :host {

@@ -1,116 +1,34 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Product } from '@core/models/catalog.model';
 import { AuthService } from '@core/services/auth.service';
-import { AppBadgeComponent, AppButtonComponent, AppCardComponent } from '@shared/ui';
+import { CatalogService } from '@core/services/catalog.service';
+import {
+  AppAlertComponent,
+  AppBadgeComponent,
+  AppButtonComponent,
+  AppSpinnerComponent,
+} from '@shared/ui';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [RouterLink, AppCardComponent, AppButtonComponent, AppBadgeComponent],
-  template: `
-    <div class="space-y-16 sm:space-y-24 pb-16">
-      <!-- 1. Hero Showcase Section -->
-      <section class="relative overflow-hidden pt-12 sm:pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <!-- Text Content -->
-          <div class="lg:col-span-7 space-y-6">
-            <app-badge variant="secondary" size="md" class="gap-2">
-              <span class="w-1.5 h-1.5 bg-primary dark:bg-sky-400 rounded-none inline-block"></span>
-              Sprint 1 • Foundation & Identity
-            </app-badge>
-
-            <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl uppercase tracking-tight text-slate-950 dark:text-white leading-[1.05]">
-              Redefining <span class="italic font-normal">the aesthetic</span> of contemporary luxury
-            </h1>
-
-            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-light max-w-xl leading-relaxed">
-              A collision of brutalist silhouettes and refined tailoring for the next generation. Handcrafted tactile artifacts engineered between Tokyo urban kineticism and Parisian couture salons.
-            </p>
-
-            <!-- Call to Actions -->
-            <div class="pt-2 flex flex-wrap items-center gap-4">
-              @if (auth.isAuthenticated()) {
-                <a routerLink="/profile">
-                  <app-button size="lg">
-                    <span>Go to Client Profile</span>
-                    <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
-                  </app-button>
-                </a>
-              } @else {
-                <a routerLink="/auth/register">
-                  <app-button size="lg">
-                    <span>Join Membership</span>
-                    <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
-                  </app-button>
-                </a>
-
-                <a routerLink="/auth/login">
-                  <app-button variant="outline" size="lg">
-                    Sign In
-                  </app-button>
-                </a>
-              }
-            </div>
-          </div>
-
-          <!-- Hero Graphic Panel -->
-          <div class="lg:col-span-5 relative">
-            <div class="aspect-4/5 bg-slate-900 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between p-8 text-white shadow-2xl">
-              <div class="space-y-1">
-                <span class="text-[10px] uppercase tracking-[0.3em] text-slate-400 block font-mono">ARCHIVE PROTOCOL</span>
-                <span class="text-xl font-display uppercase tracking-wider font-bold">WEAREZ MAISON</span>
-              </div>
-
-              <div class="space-y-4">
-                <div class="w-12 h-0.5 bg-white/40"></div>
-                <p class="text-xs text-slate-300 font-light leading-relaxed">
-                  Engineered with NestJS, Prisma ORM, and Angular 20 Standalone architecture. Built for high performance, strict validation, and seamless authentication.
-                </p>
-                <div class="text-[10px] uppercase tracking-widest text-slate-400 font-mono">
-                  AUTHENTICATION PROTOCOL • V1.0.0
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2. Value Pillars Grid -->
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <app-card padding="default" class="space-y-3">
-            <span class="material-symbols-outlined text-2xl text-primary dark:text-sky-300">security</span>
-            <h3 class="font-display text-lg uppercase tracking-wider text-slate-950 dark:text-white font-bold">
-              Secure Authentication
-            </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-              256-bit encrypted JWT token sessions with route guards protecting sensitive member resources.
-            </p>
-          </app-card>
-
-          <app-card padding="default" class="space-y-3">
-            <span class="material-symbols-outlined text-2xl text-primary dark:text-sky-300">tune</span>
-            <h3 class="font-display text-lg uppercase tracking-wider text-slate-950 dark:text-white font-bold">
-              Strict Validation
-            </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-              Real-time credential verification, multi-factor criteria inspection, and backend error resolution.
-            </p>
-          </app-card>
-
-          <app-card padding="default" class="space-y-3">
-            <span class="material-symbols-outlined text-2xl text-primary dark:text-sky-300">devices</span>
-            <h3 class="font-display text-lg uppercase tracking-wider text-slate-950 dark:text-white font-bold">
-              Responsive Foundation
-            </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-              Fluid mobile-first layouts crafted with TailwindCSS, dark mode integration, and accessible components.
-            </p>
-          </app-card>
-        </div>
-      </section>
-    </div>
-  `,
+  imports: [
+    RouterLink,
+    CurrencyPipe,
+    AppAlertComponent,
+    AppBadgeComponent,
+    AppButtonComponent,
+    AppSpinnerComponent,
+  ],
+  templateUrl: './home-page.component.html',
   styles: [
     `
       :host {
@@ -120,6 +38,84 @@ import { AppBadgeComponent, AppButtonComponent, AppCardComponent } from '@shared
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   public readonly auth = inject(AuthService);
+  private readonly catalogService = inject(CatalogService);
+  readonly usingSampleData = this.catalogService.usingSampleData;
+
+  readonly categoryTabs = [
+    { key: 'ALL', label: 'All Curations' },
+    { key: 'outerwear', label: 'Outerwear' },
+    { key: 'tops-knitwear', label: 'Tops & Knitwear' },
+    { key: 'trousers-denim', label: 'Trousers & Denim' },
+    { key: 'footwear', label: 'Footwear' },
+    { key: 'accessories', label: 'Accessories' },
+  ];
+
+  readonly selectedCategory = signal<string>('ALL');
+  readonly curatedProducts = signal<Product[]>([]);
+  readonly isLoading = signal<boolean>(true);
+  readonly quickAddNotice = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.loadCuratedDrops('ALL');
+  }
+
+  onCategoryTabChange(categoryKey: string): void {
+    this.selectedCategory.set(categoryKey);
+    this.loadCuratedDrops(categoryKey);
+  }
+
+  quickAdd(product: Product, size: string): void {
+    const variant =
+      product.variants.find((v) => v.size === size && v.stock > 0) ??
+      product.variants.find((v) => v.size === size) ??
+      product.variants[0];
+
+    if (!variant || variant.stock <= 0) {
+      this.quickAddNotice.set(
+        `"${product.name}" in Size ${size} is currently out of stock in this capsule.`,
+      );
+      return;
+    }
+
+    this.quickAddNotice.set(
+      `Added "${product.name}" (Size ${size} · SKU ${variant.sku} · $${variant.price}) to bag preview.`,
+    );
+  }
+
+  getPrimaryImage(product: Product): string {
+    const primary = product.images.find((i) => i.isPrimary) ?? product.images[0];
+    return primary?.url || '';
+  }
+
+  getSecondaryImage(product: Product): string | null {
+    const primary = product.images.find((i) => i.isPrimary) ?? product.images[0];
+    const secondary = product.images.find((i) => i.id !== primary?.id);
+    return secondary?.url || null;
+  }
+
+  getTotalStock(product: Product): number {
+    return product.variants.reduce((sum, v) => sum + v.stock, 0);
+  }
+
+  getUniqueColors(product: Product): { name: string; hex: string }[] {
+    const seen = new Map<string, string>();
+    for (const v of product.variants) {
+      if (!seen.has(v.color)) seen.set(v.color, v.colorHex);
+    }
+    return Array.from(seen.entries()).map(([name, hex]) => ({ name, hex }));
+  }
+
+  getAvailableSizes(product: Product): string[] {
+    return Array.from(new Set(product.variants.map((v) => v.size)));
+  }
+
+  private loadCuratedDrops(catKey: string): void {
+    this.isLoading.set(true);
+    this.catalogService.getCuratedDrops(catKey, 8).subscribe((products) => {
+      this.curatedProducts.set(products);
+      this.isLoading.set(false);
+    });
+  }
 }

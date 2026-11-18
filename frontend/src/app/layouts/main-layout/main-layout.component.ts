@@ -1,252 +1,267 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Product } from '@core/models/catalog.model';
 import { AuthService } from '@core/services/auth.service';
+import { CatalogService } from '@core/services/catalog.service';
 import { ThemeService } from '@core/services/theme.service';
-import { AppButtonComponent } from '@shared/ui';
+import { AppBadgeComponent, AppButtonComponent } from '@shared/ui';
+
+interface NavCategoryLevel {
+  key: string;
+  label: string;
+  icon: string;
+  brands: string[];
+}
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, AppButtonComponent],
-  template: `
-    <div
-      class="min-h-screen flex flex-col bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white transition-colors selection:bg-primary selection:text-white"
-    >
-      <!-- Navigation Header -->
-      <header
-        class="sticky top-0 z-40 w-full bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors"
-      >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-4">
-          <!-- Left: Brand Logo -->
-          <div class="flex items-center gap-8">
-            <a routerLink="/" class="flex items-center gap-2 group">
-              <span
-                class="font-display font-semibold text-2xl sm:text-3xl uppercase tracking-tight text-slate-950 dark:text-white group-hover:text-primary transition-colors"
-              >
-                WEAREZ
-              </span>
-              <span class="w-1.5 h-1.5 bg-primary dark:bg-sky-400 rounded-none inline-block"></span>
-            </a>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center gap-6 text-xs uppercase tracking-[0.15em] font-medium">
-              <a
-                routerLink="/"
-                routerLinkActive="text-primary dark:text-sky-300 font-bold border-b-2 border-primary dark:border-sky-300"
-                [routerLinkActiveOptions]="{ exact: true }"
-                class="py-1 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors"
-              >
-                Home
-              </a>
-              @if (auth.isAuthenticated()) {
-                <a
-                  routerLink="/profile"
-                  routerLinkActive="text-primary dark:text-sky-300 font-bold border-b-2 border-primary dark:border-sky-300"
-                  class="py-1 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors"
-                >
-                  Client Profile
-                </a>
-              }
-            </nav>
-          </div>
-
-          <!-- Right Action Console -->
-          <div class="flex items-center gap-3">
-            <!-- Theme Toggle -->
-            <button
-              type="button"
-              (click)="theme.toggle()"
-              class="p-2 text-slate-500 hover:text-primary dark:hover:text-white transition-colors cursor-pointer"
-              title="Toggle Theme"
-              aria-label="Toggle Theme"
-            >
-              @if (theme.isDark()) {
-                <span class="material-symbols-outlined text-xl text-amber-400">light_mode</span>
-              } @else {
-                <span class="material-symbols-outlined text-xl text-primary">dark_mode</span>
-              }
-            </button>
-
-            <!-- Authentication User State -->
-            @if (auth.isAuthenticated()) {
-              <div class="flex items-center gap-2">
-                @if (auth.isAdmin()) {
-                  <a routerLink="/admin/customers" class="hidden sm:inline-block">
-                    <app-button variant="primary" size="sm">
-                      <span class="material-symbols-outlined text-base mr-1">admin_panel_settings</span>
-                      Admin
-                    </app-button>
-                  </a>
-                }
-                <a
-                  routerLink="/profile"
-                  class="flex items-center gap-2 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-white transition-all cursor-pointer bg-white dark:bg-slate-900"
-                  title="View Profile"
-                >
-                  <span class="w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center">
-                    {{ (auth.currentUser()?.email || 'U').slice(0, 1).toUpperCase() }}
-                  </span>
-                  <span class="hidden sm:inline-block text-[11px] font-semibold text-slate-700 dark:text-slate-300 max-w-[120px] truncate">
-                    {{ auth.currentUser()?.email }}
-                  </span>
-                </a>
-
-                <app-button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  (click)="auth.logout()"
-                  ariaLabel="Sign Out"
-                >
-                  <span class="material-symbols-outlined text-lg">logout</span>
-                </app-button>
-              </div>
-            } @else {
-              <div class="flex items-center gap-2">
-                <a routerLink="/auth/login">
-                  <app-button variant="ghost" size="sm">Sign In</app-button>
-                </a>
-                <a routerLink="/auth/register">
-                  <app-button variant="primary" size="sm">Register</app-button>
-                </a>
-              </div>
-            }
-
-            <!-- Mobile Hamburger Toggle -->
-            <button
-              type="button"
-              (click)="isMobileMenuOpen.set(!isMobileMenuOpen())"
-              class="md:hidden p-2 text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
-              aria-label="Toggle navigation menu"
-            >
-              <span class="material-symbols-outlined text-2xl">
-                {{ isMobileMenuOpen() ? 'close' : 'menu' }}
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Mobile Drawer Menu -->
-        @if (isMobileMenuOpen()) {
-          <div
-            class="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-dark-bg p-4 space-y-3"
-          >
-            <a
-              routerLink="/"
-              (click)="isMobileMenuOpen.set(false)"
-              class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
-            >
-              Home
-            </a>
-            @if (auth.isAuthenticated()) {
-              <a
-                routerLink="/profile"
-                (click)="isMobileMenuOpen.set(false)"
-                class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
-              >
-                Client Profile
-              </a>
-              @if (auth.isAdmin()) {
-                <a
-                  routerLink="/admin/customers"
-                  (click)="isMobileMenuOpen.set(false)"
-                  class="block py-2 text-xs uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200"
-                >
-                  Admin · Customer Accounts
-                </a>
-              }
-              <div class="pt-2">
-                <app-button
-                  type="button"
-                  variant="danger"
-                  size="sm"
-                  [fullWidth]="true"
-                  (click)="isMobileMenuOpen.set(false); auth.logout()"
-                >
-                  Sign Out
-                </app-button>
-              </div>
-            } @else {
-              <div class="flex flex-col gap-2 pt-2">
-                <a routerLink="/auth/login" (click)="isMobileMenuOpen.set(false)">
-                  <app-button variant="outline" [fullWidth]="true" size="sm">
-                    Sign In
-                  </app-button>
-                </a>
-                <a routerLink="/auth/register" (click)="isMobileMenuOpen.set(false)">
-                  <app-button variant="primary" [fullWidth]="true" size="sm">
-                    Create Account
-                  </app-button>
-                </a>
-              </div>
-            }
-          </div>
-        }
-      </header>
-
-      <!-- 3. Dynamic Page View Outlet -->
-      <main class="flex-1">
-        <router-outlet />
-      </main>
-
-      <!-- 4. Luxury Minimalist Footer -->
-      <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-12 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="space-y-3 md:col-span-2">
-              <span class="font-display font-semibold text-xl uppercase tracking-tight text-slate-950 dark:text-white">
-                WEAREZ MAISON
-              </span>
-              <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
-                Architectural silhouettes and contemporary luxury engineered for the avant-garde.
-              </p>
-            </div>
-
-            <div class="space-y-2 text-xs">
-              <span class="font-bold text-[11px] uppercase tracking-wider text-slate-950 dark:text-white block">
-                Navigation
-              </span>
-              <ul class="space-y-1.5 text-slate-500 dark:text-slate-400">
-                <li><a routerLink="/" class="hover:text-primary dark:hover:text-white">Home</a></li>
-                @if (auth.isAuthenticated()) {
-                  <li><a routerLink="/profile" class="hover:text-primary dark:hover:text-white">Profile</a></li>
-                } @else {
-                  <li><a routerLink="/auth/login" class="hover:text-primary dark:hover:text-white">Sign In</a></li>
-                  <li><a routerLink="/auth/register" class="hover:text-primary dark:hover:text-white">Register</a></li>
-                }
-              </ul>
-            </div>
-
-            <div class="space-y-2 text-xs">
-              <span class="font-bold text-[11px] uppercase tracking-wider text-slate-950 dark:text-white block">
-                Security & Legal
-              </span>
-              <ul class="space-y-1.5 text-slate-500 dark:text-slate-400">
-                <li><span>Privacy Policy</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div
-            class="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400"
-          >
-            <span>© 2026 WEAREZ Global Luxury Maison. All rights reserved.</span>
-          </div>
-        </div>
-      </footer>
-    </div>
-  `,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    AppButtonComponent,
+    AppBadgeComponent,
+  ],
+  templateUrl: './main-layout.component.html',
   styles: [
     `
       :host {
+        font-family: inherit;
         display: block;
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit {
   public readonly auth = inject(AuthService);
   public readonly theme = inject(ThemeService);
+  private readonly router = inject(Router);
+  private readonly catalogService = inject(CatalogService);
+
+  @ViewChild('headerSearchInput') headerSearchInputRef?: ElementRef<HTMLInputElement>;
+
   readonly isMobileMenuOpen = signal<boolean>(false);
+
+  // Search Overlay State (matching fe-dev design)
+  readonly isSearchOpen = signal<boolean>(false);
+  readonly headerSearchQuery = signal<string>('');
+  readonly searchProducts = signal<Product[]>([]);
+  readonly isSearching = signal<boolean>(false);
+  readonly popularSearchTags = [
+    'OUTERWEAR',
+    'HOODIES',
+    'CARGO',
+    'BOMBER',
+    'DENIM',
+    'TRENCH',
+    'BOOTS',
+    'KNITWEAR',
+  ];
+
+  readonly houseBrands = ['WEAREZ ATELIER', 'MAISON V'];
+  readonly luxuryRunwayBrands = ['NOIR LAB', 'PARIS PROTOCOL'];
+  readonly contemporaryHeritageBrands = ['TOKYO KINETIC', 'KINETIC LAB'];
+
+  readonly menCategories: NavCategoryLevel[] = [
+    { key: 'outerwear', label: 'Outerwear', icon: 'roller_shades', brands: ['WEAREZ ATELIER', 'TOKYO KINETIC', 'NOIR LAB'] },
+    { key: 'tops-knitwear', label: 'Tops & Knitwear', icon: 'apparel', brands: ['NOIR LAB', 'MAISON V', 'WEAREZ ATELIER'] },
+    { key: 'trousers-denim', label: 'Trousers & Denim', icon: 'styler', brands: ['MAISON V', 'TOKYO KINETIC', 'NOIR LAB'] },
+    { key: 'footwear', label: 'Footwear', icon: 'steps', brands: ['WEAREZ ATELIER', 'NOIR LAB'] },
+    { key: 'accessories', label: 'Accessories', icon: 'shopping_bag', brands: ['TOKYO KINETIC', 'MAISON V'] },
+  ];
+
+  readonly womenCategories: NavCategoryLevel[] = [
+    { key: 'outerwear', label: 'Outerwear', icon: 'roller_shades', brands: ['NOIR LAB', 'MAISON V'] },
+    { key: 'tops-knitwear', label: 'Tops & Knitwear', icon: 'apparel', brands: ['MAISON V', 'NOIR LAB'] },
+    { key: 'trousers-denim', label: 'Trousers & Denim', icon: 'styler', brands: ['NOIR LAB', 'MAISON V'] },
+    { key: 'footwear', label: 'Footwear', icon: 'steps', brands: ['NOIR LAB', 'WEAREZ ATELIER'] },
+    { key: 'accessories', label: 'Accessories', icon: 'shopping_bag', brands: ['MAISON V', 'TOKYO KINETIC'] },
+  ];
+
+  readonly seasonalCollections = [
+    { name: "Autumn / Winter '26", tag: 'CAPSULE 04', season: 'fw26' },
+    { name: "Spring / Summer '26", tag: 'RUNWAY EDIT', season: 'ss26' },
+    { name: 'Core Archive', tag: 'PERMANENT', season: 'core' },
+  ];
+
+  readonly activeMenCategory = signal<string>('outerwear');
+  readonly activeWomenCategory = signal<string>('outerwear');
+
+  ngOnInit(): void {
+    this.fetchSearchProducts();
+  }
+
+  fetchSearchProducts(): void {
+    this.isSearching.set(true);
+    this.catalogService.getProducts({ page: 1, limit: 100 }).subscribe({
+      next: (res) => {
+        this.isSearching.set(false);
+        this.searchProducts.set(res.items || []);
+      },
+      error: () => {
+        this.isSearching.set(false);
+      },
+    });
+  }
+
+  readonly headerSearchSuggestions = computed<string[]>(() => {
+    const q = this.headerSearchQuery().trim().toLowerCase();
+    if (!q || q.length < 1) return [];
+
+    const candidateTerms = new Set<string>();
+    const fashionKeywords = [
+      'jeans',
+      'denim',
+      'pants',
+      'trousers',
+      'cargo',
+      'hoodie',
+      'hoodies',
+      'bomber',
+      'jacket',
+      'outerwear',
+      'coat',
+      'trench',
+      't-shirt',
+      'tee',
+      'cardigan',
+      'oversized',
+      'blazer',
+      'sweater',
+      'boots',
+      'sneakers',
+      'leather',
+      'wool',
+      'cotton',
+      'sling',
+      'belt',
+    ];
+
+    for (const kw of fashionKeywords) {
+      if (kw.toLowerCase().includes(q) && kw.toLowerCase() !== q) {
+        candidateTerms.add(kw.toUpperCase());
+      }
+    }
+
+    for (const p of this.searchProducts()) {
+      const words = (p.name || '').split(/\s+/).map((w) => w.replace(/[^a-zA-Z0-9-]/g, ''));
+      for (const w of words) {
+        if (w.length >= 3 && w.toLowerCase().includes(q) && w.toLowerCase() !== q) {
+          candidateTerms.add(w.toUpperCase());
+        }
+      }
+      const bName = typeof p.brand === 'string' ? p.brand : p.brand?.name || '';
+      if (bName && bName.toLowerCase().includes(q) && bName.toLowerCase() !== q) {
+        candidateTerms.add(bName.toUpperCase());
+      }
+      const cat = p.category?.name || '';
+      if (cat && cat.toLowerCase().includes(q) && cat.toLowerCase() !== q) {
+        candidateTerms.add(cat.toUpperCase());
+      }
+    }
+
+    return Array.from(candidateTerms).slice(0, 6);
+  });
+
+  readonly searchResults = computed(() => {
+    const q = this.headerSearchQuery().trim().toLowerCase();
+    if (!q) return [];
+    return this.searchProducts()
+      .filter((p) => {
+        const name = (p.name || '').toLowerCase();
+        const brand = (typeof p.brand === 'string' ? p.brand : p.brand?.name || '').toLowerCase();
+        const cat = (p.category?.name || p.category?.slug || '').toLowerCase();
+        const desc = (p.description || '').toLowerCase();
+        const mat = (p.material || '').toLowerCase();
+        const sku = p.variants?.some((v) => v.sku.toLowerCase().includes(q)) ?? false;
+        return name.includes(q) || brand.includes(q) || cat.includes(q) || desc.includes(q) || mat.includes(q) || sku;
+      })
+      .slice(0, 6);
+  });
+
+  getProductImage(p: Product): string {
+    if (p.images && p.images.length > 0) {
+      const primary = p.images.find((img) => img.isPrimary) ?? p.images[0];
+      if (primary?.url) return primary.url;
+    }
+    return 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800';
+  }
+
+  openSearchOverlay(): void {
+    this.isSearchOpen.set(true);
+    setTimeout(() => {
+      this.headerSearchInputRef?.nativeElement?.focus();
+    }, 60);
+    if (this.searchProducts().length === 0) {
+      this.fetchSearchProducts();
+    }
+  }
+
+  closeSearchOverlay(): void {
+    this.isSearchOpen.set(false);
+  }
+
+  toggleSearchOverlay(): void {
+    if (this.isSearchOpen()) {
+      this.closeSearchOverlay();
+    } else {
+      this.openSearchOverlay();
+    }
+  }
+
+  onHeaderSearchInput(val: string): void {
+    this.headerSearchQuery.set(val);
+  }
+
+  applyHeaderSuggestion(term: string): void {
+    this.headerSearchQuery.set(term);
+    this.onHeaderSearchInput(term);
+  }
+
+  executeSearch(customQuery?: string): void {
+    const q = (customQuery !== undefined ? customQuery : this.headerSearchQuery()).trim();
+    this.closeSearchOverlay();
+    this.isMobileMenuOpen.set(false);
+    if (q) {
+      void this.router.navigate(['/products'], { queryParams: { search: q } });
+    } else {
+      void this.router.navigate(['/products']);
+    }
+  }
+
+  onSelectSearchResult(product: Product): void {
+    this.closeSearchOverlay();
+    this.isMobileMenuOpen.set(false);
+    void this.router.navigate(['/products', product.slug || product.id]);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardShortcuts(event: KeyboardEvent): void {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      this.toggleSearchOverlay();
+    } else if (event.key === 'Escape' && this.isSearchOpen()) {
+      this.closeSearchOverlay();
+    }
+  }
+
+  getCategoryLabel(cats: NavCategoryLevel[], key: string): string {
+    return cats.find((c) => c.key === key)?.label ?? 'Garments';
+  }
+
+  getCategoryBrands(cats: NavCategoryLevel[], key: string): string[] {
+    return cats.find((c) => c.key === key)?.brands ?? [];
+  }
 }

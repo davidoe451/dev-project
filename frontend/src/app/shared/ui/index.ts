@@ -6,3 +6,6 @@ export * from './app-select/app-select.component';
 export * from './app-dialog/app-dialog.component';
 export * from './app-spinner/app-spinner.component';
 export * from './app-table/app-table.component';
+export * from './app-alert/app-alert.component';
+export * from './app-skeleton/app-skeleton.component';
+export * from './app-pagination/app-pagination.component';

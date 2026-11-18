@@ -81,3 +81,39 @@ npm run build
 ```
 
 The generated files are written to `dist/online-clothing-store`.
+
+## Sprint 2 interface
+
+All changes for Sprint 2 are in `frontend`. The sibling `frontend-dev` directory is a design reference.
+
+| Route | Interface |
+| --- | --- |
+| `/products` | Product grid, search, combined filters, price validation, sorting, pagination and mobile filter panel |
+| `/products/:id` | Image gallery, size/color selection, variant price, SKU and stock |
+| `/admin/products` | Product editor with multiple image previews, cover selection, ordering and removal |
+| `/admin/users` | Customer list, status filters, pagination, activation and deactivation confirmation |
+
+When a catalog endpoint fails or does not provide variant/gallery data, the existing sample catalog is used. A visible **Sample catalog** notice distinguishes preview content from live prices and stock. Use **Retry live catalog** or **Retry live product** to try the API again.
+
+### Product photos
+
+In the product editor, use a hosted HTTP/HTTPS image URL to save images with the existing product API. Device photos support JPEG, PNG and WebP, with a limit of 5 MB per image and 8 gallery images. The first image is the cover. Local previews are not saved as uploaded images, and the product cannot be saved while uploads remain pending.
+
+File upload is disabled until the backend supplies an upload endpoint. Set `productImageUploadUrl` in the environment configuration to the complete endpoint URL. The image picker sends one `multipart/form-data` request per image using field `file` and expects either `{ "url": "https://..." }` or `{ "data": { "url": "https://..." } }`. Uploaded URLs are then saved through the existing product create/update request. Server-side file validation and storage belong to the backend.
+
+### Backend handoff
+
+- Catalog list/detail responses need product `variants` (size, color, SKU, price, stock) and `images` (URL, primary flag, sort order), matching `src/app/core/models/catalog.model.ts`.
+- Catalog search, filters, sorting and pagination are sent together as query parameters by `CatalogService`. The existing legacy `ProductService` uses a separate product contract; this interface work does not add a backend variant API.
+- Customer management uses `GET /users?role=CUSTOMER` and `PATCH /users/:id/active` with `{ "isActive": true }` or `{ "isActive": false }`. The FE maps `isActive` to status labels and applies search/pagination locally when the API returns an array. The backend must enforce admin authorization. `/admin/customers` redirects to `/admin/users`.
+- Product upload requires the configurable endpoint described above. The current default is empty, so selecting files only previews them.
+
+Run `npm run check:gallery` with Node.js 24 to check image file type, size and count limits. No backend or database access is needed for this check.
+
+### Current admin API integration
+
+The admin product service adapts the main backend's direct catalog response (`items`, `total`, `page`, `limit`, `totalPages`) to the admin UI. It converts numeric IDs to strings, `basePrice` to the displayed price, variant stock to total stock, and gallery images to the existing admin gallery format. Categories load from `/categories`.
+
+Run `npm run check:admin` to check response mapping, or `npm run check:admin -- --live` to also make read-only requests to `/products` and `/categories` on `http://localhost:3000`.
+
+The current backend does not expose order endpoints or product create/edit/delete endpoints. The dashboard shows unavailable order statistics instead of fabricated counts; the orders page reports that the feature is not available. These missing endpoints need backend work.

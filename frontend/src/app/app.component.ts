@@ -7,42 +7,7 @@ import { AppButtonComponent, AppDialogComponent } from '@shared/ui';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, AppDialogComponent, AppButtonComponent],
-  template: `
-    <router-outlet />
-
-    <!-- Sign Out Confirmation Modal using shadcn app-dialog -->
-    <app-dialog
-      [open]="auth.showLogoutConfirm()"
-      (openChange)="auth.cancelLogout()"
-      title="Sign Out Confirmation"
-      description="Are you sure you want to sign out of your WEAREZ account?"
-      size="sm"
-      [showCloseButton]="true"
-    >
-      <div class="py-1 text-xs text-slate-500 dark:text-slate-400">
-        Your active session will be securely terminated and you will need to sign in again to access protected areas.
-      </div>
-
-      <div dialog-footer class="flex items-center gap-2.5 w-full justify-end">
-        <app-button
-          type="button"
-          variant="secondary"
-          size="md"
-          (click)="auth.cancelLogout()"
-        >
-          Cancel
-        </app-button>
-        <app-button
-          type="button"
-          variant="primary"
-          size="md"
-          (click)="auth.confirmLogout()"
-        >
-          Sign Out
-        </app-button>
-      </div>
-    </app-dialog>
-  `,
+  templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {

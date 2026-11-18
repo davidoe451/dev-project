@@ -1,0 +1,9 @@
+@if (products().length > 0) {
+  <div class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+    <div class="flex items-end justify-between gap-4">
+      <div><p class="text-[11px] uppercase tracking-[0.2em] text-primary dark:text-sky-300 font-bold">Archive Curation</p><h2 class="font-display text-2xl sm:text-3xl uppercase text-slate-950 dark:text-white mt-1">You May Also Consider</h2></div>
+      <a routerLink="/products"><app-button variant="ghost" size="sm">View All</app-button></a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">@for (product of products(); track product.id) { <app-product-card [product]="product" /> }</div>
+  </div>
+}

@@ -1,0 +1,86 @@
+<div class="lg:col-span-5 space-y-6">
+  <app-card padding="lg" class="space-y-6">
+    <div class="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-5">
+      <div class="flex flex-wrap items-center gap-2">
+        <app-badge variant="outline" size="sm">{{ product().brand.name }}</app-badge>
+        <app-badge variant="secondary" size="sm">{{ product().category.name }}</app-badge>
+      </div>
+      <h1 class="font-display text-2xl sm:text-4xl uppercase tracking-tight text-slate-950 dark:text-white pt-1">{{ product().name }}</h1>
+      <button type="button" (click)="scrollToReviews.emit()" class="inline-flex items-center gap-2 group cursor-pointer text-left pt-1">
+        <div class="flex items-center text-amber-500">
+          @for (star of [1, 2, 3, 4, 5]; track star) { <span class="material-symbols-outlined text-sm">{{ star <= averageRatingNum() ? 'star' : 'star_border' }}</span> }
+        </div>
+        <span class="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{{ averageRating() }}</span>
+        <span class="text-[11px] text-slate-500 group-hover:text-primary dark:group-hover:text-white underline uppercase tracking-wider font-mono">({{ reviewCount() }} CLIENT CRITIQUES)</span>
+      </button>
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <p class="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">{{ displayPrice() | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+        <app-badge [variant]="stockStatus().variant" size="md">{{ stockStatus().label }}</app-badge>
+      </div>
+      @if (selectedVariant(); as variant) {
+        <p class="text-[11px] font-mono text-slate-500 dark:text-slate-400">SKU: <span class="font-bold text-slate-800 dark:text-slate-200">{{ variant.sku }}</span></p>
+      }
+    </div>
+
+    <div class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+      <p>{{ product().description }}</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 pt-1"><span class="font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Composition:</span> {{ product().material }}</p>
+    </div>
+
+    <div class="space-y-2.5">
+      <div class="flex items-center justify-between text-xs"><span class="font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Color: <span class="text-primary dark:text-sky-300">{{ selectedColor() }}</span></span></div>
+      <div class="flex flex-wrap gap-2">
+        @for (color of colors(); track color.name) {
+          <app-button [variant]="selectedColor() === color.name ? 'primary' : 'outline'" size="sm" (click)="colorSelect.emit(color.name)">
+            <span class="w-3 h-3 border border-slate-300 dark:border-slate-600 inline-block shrink-0" [style.backgroundColor]="color.hex"></span><span>{{ color.name }}</span>
+          </app-button>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-2.5">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Size: <span class="text-primary dark:text-sky-300">{{ selectedSize() }}</span></span>
+        <app-button variant="ghost" size="sm" (click)="sizeGuideOpenChange.emit(true)"><span class="material-symbols-outlined text-sm">straighten</span><span>Size Guide</span></app-button>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        @for (item of sizes(); track item.size) {
+          <app-button [variant]="selectedSize() === item.size ? 'primary' : 'outline'" size="sm" (click)="sizeSelect.emit(item.size)" [class]="item.stock === 0 ? 'opacity-50 line-through' : ''">{{ item.size }}</app-button>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800">
+      <div class="flex items-center gap-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Quantity</span>
+        <div class="inline-flex items-center border border-slate-200 dark:border-slate-700">
+          <app-button variant="ghost" size="icon" [disabled]="quantity() <= 1 || stockStatus().stock === 0" (click)="decrement.emit()" ariaLabel="Decrease quantity"><span class="material-symbols-outlined text-base">remove</span></app-button>
+          <span class="w-10 text-center text-xs font-bold text-slate-950 dark:text-white">{{ quantity() }}</span>
+          <app-button variant="ghost" size="icon" [disabled]="quantity() >= stockStatus().stock || stockStatus().stock === 0" (click)="increment.emit()" ariaLabel="Increase quantity"><span class="material-symbols-outlined text-base">add</span></app-button>
+        </div>
+      </div>
+      <app-button variant="primary" size="lg" [fullWidth]="true" [disabled]="stockStatus().stock === 0" (click)="addToBag.emit()">
+        <span class="material-symbols-outlined text-base">shopping_bag</span><span>{{ stockStatus().stock === 0 ? 'Variant Out of Stock' : 'Add to Shopping Bag' }}</span>
+      </app-button>
+      @if (cartFeedback()) { <app-alert variant="success" title="Mock Cart Preview (Sprint 2)">{{ cartFeedback() }}</app-alert> }
+    </div>
+  </app-card>
+</div>
+
+<app-dialog [open]="sizeGuideOpen()" (openChange)="sizeGuideOpenChange.emit($event)">
+  <div class="space-y-4 p-2">
+    <div><h3 class="font-display text-lg uppercase text-slate-950 dark:text-white">Tailoring Size &amp; Measurement Guide</h3><p class="text-xs text-slate-500 dark:text-slate-400">All measurements in inches unless specified otherwise.</p></div>
+    <div class="overflow-x-auto text-xs">
+      <table class="w-full border-collapse">
+        <thead><tr class="border-b border-slate-200 dark:border-slate-700 text-left"><th class="py-2 pr-4 font-bold">Size</th><th class="py-2 pr-4">Chest / Bust</th><th class="py-2 pr-4">Waist</th><th class="py-2 pr-4">Sleeve</th></tr></thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+          <tr><td class="py-2 font-bold font-mono">S</td><td class="py-2">36 - 38"</td><td class="py-2">30 - 32"</td><td class="py-2">33.5"</td></tr>
+          <tr><td class="py-2 font-bold font-mono">M</td><td class="py-2">39 - 41"</td><td class="py-2">33 - 35"</td><td class="py-2">34.5"</td></tr>
+          <tr><td class="py-2 font-bold font-mono">L</td><td class="py-2">42 - 44"</td><td class="py-2">36 - 38"</td><td class="py-2">35.5"</td></tr>
+          <tr><td class="py-2 font-bold font-mono">XL</td><td class="py-2">45 - 47"</td><td class="py-2">39 - 41"</td><td class="py-2">36.5"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex justify-end pt-2"><app-button variant="primary" size="sm" (click)="sizeGuideOpenChange.emit(false)">Close Guide</app-button></div>
+  </div>
+</app-dialog>

@@ -1,0 +1,19 @@
+<div [attr.role]="variant() === 'destructive' || variant() === 'warning' ? 'alert' : 'status'" [class]="alertClass()">
+  <span class="material-symbols-outlined text-base shrink-0 mt-0.5">{{ resolvedIcon() }}</span>
+  <div class="flex-1 font-medium leading-relaxed">
+    @if (title()) {
+      <p class="font-bold uppercase tracking-wider text-[11px] mb-0.5">{{ title() }}</p>
+    }
+    <ng-content />
+  </div>
+  @if (dismissible()) {
+    <button
+      type="button"
+      (click)="dismiss.emit()"
+      class="text-current opacity-70 hover:opacity-100 transition-opacity p-0.5 shrink-0 cursor-pointer"
+      aria-label="Dismiss alert"
+    >
+      <span class="material-symbols-outlined text-base">close</span>
+    </button>
+  }
+</div>
