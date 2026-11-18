@@ -34,10 +34,13 @@ export class ProductService {
     const {
       search,
       categoryId,
+      category,
       brandId,
+      brand,
       minPrice,
       maxPrice,
       size,
+      inStockOnly,
       sort = 'newest',
       page = 1,
       limit = 12,
@@ -50,11 +53,14 @@ export class ProductService {
     const where: Prisma.ProductWhereInput = { isActive: true };
     if (search) where.name = { contains: search };
     if (categoryId) where.categoryId = categoryId;
+    if (category) where.category = { slug: category };
     if (brandId) where.brandId = brandId;
+    if (brand) where.brand = { slug: brand };
     if (minPrice !== undefined || maxPrice !== undefined) {
       where.price = { gte: minPrice, lte: maxPrice };
     }
     if (size) where.variants = { some: { size, isActive: true } };
+    if (inStockOnly) where.variants = { some: { size, isActive: true, stock: { gt: 0 } } };
 
     const [products, total] = await this.prisma.$transaction([
       this.prisma.product.findMany({
@@ -66,17 +72,19 @@ export class ProductService {
           id: true,
           name: true,
           slug: true,
+          description: true,
           price: true,
+          isActive: true,
+          createdAt: true,
           category: { select: { id: true, name: true, slug: true } },
-          brand: { select: { id: true, name: true } },
+          brand: { select: { id: true, name: true, slug: true } },
           images: {
             orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }, { createdAt: 'asc' }],
-            take: 1,
-            select: { url: true },
+            select: { id: true, url: true, isPrimary: true, sortOrder: true },
           },
           variants: {
             where: { isActive: true },
-            select: { size: true, stock: true },
+            select: { id: true, sku: true, size: true, color: true, price: true, stock: true },
           },
         },
       }),
@@ -86,6 +94,11 @@ export class ProductService {
     const items = products.map(({ images, variants, price, ...product }) => ({
       ...product,
       price: Number(price),
+      images,
+      variants: variants.map((variant) => ({
+        ...variant,
+        price: Number(variant.price ?? price),
+      })),
       imageUrl: images[0]?.url ?? null,
       sizes: [...new Set(variants.map((v) => v.size))].sort(
         (a, b) => SIZE.indexOf(a as Size) - SIZE.indexOf(b as Size),
@@ -99,20 +112,23 @@ export class ProductService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(idOrSlug: string) {
+    const id = Number(idOrSlug);
     const product = await this.prisma.product.findFirst({
-      where: { id, isActive: true },
+      where: { ...(Number.isSafeInteger(id) && id > 0 ? { id } : { slug: idOrSlug }), isActive: true },
       select: {
         id: true,
         name: true,
         slug: true,
         description: true,
         price: true,
+        isActive: true,
+        createdAt: true,
         category: { select: { id: true, name: true, slug: true } },
-        brand: { select: { id: true, name: true } },
+        brand: { select: { id: true, name: true, slug: true } },
         images: {
           orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }],
-          select: { id: true, url: true, isPrimary: true },
+          select: { id: true, url: true, isPrimary: true, sortOrder: true },
         },
         variants: {
           where: { isActive: true },

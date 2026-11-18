@@ -52,8 +52,8 @@ export class ProductController {
   @Get(':id')
   @ApiOperation({ summary: 'Get product details with variants and images' })
   @ApiNotFoundResponse({ description: 'Product not found' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.findOne(id);
+  findOne(@Param('id') idOrSlug: string) {
+    return this.productsService.findOne(idOrSlug);
   }
 
   @Public()

@@ -25,8 +25,16 @@ export class ProductListDto {
   @ApiPropertyOptional() @IsOptional() @Type(() => Number) @IsInt() @Min(1)
   categoryId?: number;
 
+  @ApiPropertyOptional({ description: 'Category slug' })
+  @IsOptional() @IsString()
+  category?: string;
+
   @ApiPropertyOptional() @IsOptional() @Type(() => Number) @IsInt() @Min(1)
   brandId?: number;
+
+  @ApiPropertyOptional({ description: 'Brand slug' })
+  @IsOptional() @IsString()
+  brand?: string;
 
   @ApiPropertyOptional() @IsOptional() @Type(() => Number) @IsNumber() @Min(0)
   minPrice?: number;
@@ -37,6 +45,10 @@ export class ProductListDto {
   @ApiPropertyOptional({ enum: SIZE })
   @IsOptional() @IsIn(SIZE)
   size?: string;
+
+  @ApiPropertyOptional({ description: 'Only products with available stock' })
+  @IsOptional() @Transform(({ value }) => value === 'true' ? true : value === 'false' ? false : value) @IsBoolean()
+  inStockOnly?: boolean;
 
   @ApiPropertyOptional({ enum: PRODUCT_SORTS, default: 'newest' })
   @IsOptional() @IsIn(PRODUCT_SORTS)

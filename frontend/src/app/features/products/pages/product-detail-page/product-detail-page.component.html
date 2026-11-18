@@ -60,6 +60,10 @@
       />
     </div>
 
+    @if (!usingSampleData()) {
+      <app-product-image-manager [product]="prod" (changed)="retryLiveProduct()" />
+    }
+
     <app-product-review-section [state]="reviewState" />
     <app-related-products [products]="relatedProducts()" />
   }

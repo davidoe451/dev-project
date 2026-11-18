@@ -10,6 +10,7 @@
     "lint:fix": "eslint . --fix",
     "check:gallery": "node scripts/check-gallery-images.mjs",
     "check:admin": "node scripts/check-admin-contracts.mjs",
+    "check:catalog": "node scripts/check-catalog-contracts.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { UpperCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AppAlertComponent, AppBadgeComponent, AppButtonComponent } from '@shared/ui';
 import { CatalogSearchToolbarComponent } from '../../components/catalog-search-toolbar/catalog-search-toolbar.component';
@@ -12,7 +11,6 @@ import { ProductListPageState } from './product-list-page.state';
   standalone: true,
   imports: [
     RouterLink,
-    UpperCasePipe,
     AppAlertComponent,
     AppBadgeComponent,
     AppButtonComponent,

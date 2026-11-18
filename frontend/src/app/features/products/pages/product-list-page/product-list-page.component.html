@@ -70,16 +70,6 @@
           <span>Brand: {{ selectedBrandName() }}</span><button type="button" (click)="clearBrand()" class="hover:text-rose-500 cursor-pointer" title="Remove brand"><span class="material-symbols-outlined text-xs">close</span></button>
         </span>
       }
-      @if (selectedGender() !== 'all') {
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-sm">
-          <span>Gender: {{ selectedGender() }}</span><button type="button" (click)="clearGender()" class="hover:text-rose-500 cursor-pointer" title="Remove gender"><span class="material-symbols-outlined text-xs">close</span></button>
-        </span>
-      }
-      @if (selectedSeason() !== 'all') {
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-sm">
-          <span>Season: {{ selectedSeason() | uppercase }}</span><button type="button" (click)="clearSeason()" class="hover:text-rose-500 cursor-pointer" title="Remove season"><span class="material-symbols-outlined text-xs">close</span></button>
-        </span>
-      }
       @if (selectedSize() !== 'ALL') {
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-sm">
           <span>Size: {{ selectedSize() }}</span><button type="button" (click)="clearSize()" class="hover:text-rose-500 cursor-pointer" title="Remove size"><span class="material-symbols-outlined text-xs">close</span></button>
@@ -103,10 +93,6 @@
       [categoryOptions]="categoryOptions()"
       [totalItems]="totalItems()"
       [selectedCategory]="selectedCategory()"
-      [genderOptions]="genderOptions"
-      [selectedGender]="selectedGender()"
-      [seasonOptions]="seasonOptions"
-      [selectedSeason]="selectedSeason()"
       [availableSizes]="availableSizes()"
       [selectedSize]="selectedSize()"
       [inStockOnly]="inStockOnly()"
@@ -116,8 +102,6 @@
       [activeFilterCount]="activeFilterCount()"
       [showMobileFilters]="showMobileFilters()"
       (categoryChange)="onCategoryChange($event)"
-      (genderChange)="onGenderChange($event)"
-      (seasonChange)="onSeasonChange($event)"
       (sizeChange)="onSizeSelect($event)"
       (inStockChange)="toggleInStock($event)"
       (minPriceChange)="minPriceInput.set($event)"

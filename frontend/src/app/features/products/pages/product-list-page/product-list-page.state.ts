@@ -27,8 +27,6 @@ export class ProductListPageState {
   readonly search = signal('');
   readonly selectedCategory = signal('all');
   readonly selectedBrand = signal('all');
-  readonly selectedGender = signal('all');
-  readonly selectedSeason = signal('all');
   readonly selectedSize = signal('ALL');
   readonly inStockOnly = signal(false);
   readonly minPriceInput = signal('');
@@ -60,20 +58,6 @@ export class ProductListPageState {
     ...this.brands().map((brand) => ({ value: brand.slug, label: brand.name })),
   ]);
 
-  readonly genderOptions = [
-    { value: 'all', label: 'All' },
-    { value: 'men', label: 'Men' },
-    { value: 'women', label: 'Women' },
-    { value: 'unisex', label: 'Unisex' },
-  ];
-
-  readonly seasonOptions = [
-    { value: 'all', label: 'All' },
-    { value: 'fw26', label: "Autumn/Winter '26" },
-    { value: 'ss26', label: "Spring/Summer '26" },
-    { value: 'core', label: 'Core Archive' },
-  ];
-
   readonly sortOptions: SelectOption[] = [
     { value: 'newest', label: 'Newest Arrivals' },
     { value: 'price_asc', label: 'Price: Low to High' },
@@ -85,8 +69,6 @@ export class ProductListPageState {
     if (this.search().trim()) count++;
     if (this.selectedCategory() !== 'all') count++;
     if (this.selectedBrand() !== 'all') count++;
-    if (this.selectedGender() !== 'all') count++;
-    if (this.selectedSeason() !== 'all') count++;
     if (this.selectedSize() !== 'ALL') count++;
     if (this.inStockOnly()) count++;
     if (this.minPriceInput().trim()) count++;
@@ -97,9 +79,6 @@ export class ProductListPageState {
   readonly heroTitle = computed(() => {
     const query = this.search().trim();
     if (query) return `SEARCH: "${query.toUpperCase()}"`;
-    const gender = this.selectedGender();
-    if (gender === 'men') return "MEN'S READY-TO-WEAR";
-    if (gender === 'women') return "WOMEN'S READY-TO-WEAR";
     const brandSlug = this.selectedBrand();
     if (brandSlug !== 'all') {
       const brandName = this.brands().find((brand) => brand.slug === brandSlug)?.name ?? brandSlug;
@@ -119,8 +98,6 @@ export class ProductListPageState {
       this.search.set(params.get('search') ?? '');
       this.selectedCategory.set(params.get('category') ?? 'all');
       this.selectedBrand.set(params.get('brand') ?? 'all');
-      this.selectedGender.set(params.get('gender') ?? 'all');
-      this.selectedSeason.set(params.get('season') ?? 'all');
       this.selectedSize.set((params.get('size') ?? 'ALL').toUpperCase());
       this.inStockOnly.set(params.get('inStock') === 'true');
       this.minPriceInput.set(params.get('minPrice') ?? '');
@@ -169,28 +146,6 @@ export class ProductListPageState {
   onBrandChange(slug: string): void {
     this.selectedBrand.set(slug || 'all');
     this.updateQueryParams({ brand: slug && slug !== 'all' ? slug : null, page: 1 });
-  }
-
-  onGenderChange(gender: string): void {
-    const next = this.selectedGender() === gender ? 'all' : gender;
-    this.selectedGender.set(next);
-    this.updateQueryParams({ gender: next !== 'all' ? next : null, page: 1 });
-  }
-
-  clearGender(): void {
-    this.selectedGender.set('all');
-    this.updateQueryParams({ gender: null, page: 1 });
-  }
-
-  onSeasonChange(season: string): void {
-    const next = this.selectedSeason() === season ? 'all' : season;
-    this.selectedSeason.set(next);
-    this.updateQueryParams({ season: next !== 'all' ? next : null, page: 1 });
-  }
-
-  clearSeason(): void {
-    this.selectedSeason.set('all');
-    this.updateQueryParams({ season: null, page: 1 });
   }
 
   clearBrand(): void {
@@ -266,8 +221,6 @@ export class ProductListPageState {
     this.search.set('');
     this.selectedCategory.set('all');
     this.selectedBrand.set('all');
-    this.selectedGender.set('all');
-    this.selectedSeason.set('all');
     this.selectedSize.set('ALL');
     this.inStockOnly.set(false);
     this.minPriceInput.set('');
@@ -294,7 +247,7 @@ export class ProductListPageState {
     const max = this.maxPriceInput().trim();
     const query: ProductQueryParams = {
       search: this.search(), category: this.selectedCategory(), brand: this.selectedBrand(),
-      gender: this.selectedGender(), season: this.selectedSeason(), size: this.selectedSize(),
+      size: this.selectedSize(),
       inStockOnly: this.inStockOnly(), minPrice: min ? Number(min) : null, maxPrice: max ? Number(max) : null,
       sort: this.sort(), page: this.page(), limit: this.limit,
     };

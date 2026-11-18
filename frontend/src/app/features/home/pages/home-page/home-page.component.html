@@ -145,7 +145,7 @@
 
       <!-- Category Tabs -->
       <div class="flex flex-wrap items-center gap-1.5 bg-slate-100 dark:bg-slate-900 p-1">
-        @for (tab of categoryTabs; track tab.key) {
+        @for (tab of categoryTabs(); track tab.key) {
           <app-button
             [variant]="selectedCategory() === tab.key ? 'primary' : 'ghost'"
             size="sm"

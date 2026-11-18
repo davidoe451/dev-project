@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -10,6 +10,7 @@ import {
   ProductQueryParams,
 } from '../models/catalog.model';
 import { MOCK_BRANDS, MOCK_CATEGORIES, MOCK_PRODUCTS } from '../data/mock-catalog.data';
+import { CatalogApiList, CatalogApiProduct, mapCatalogList, mapCatalogProduct } from '../models/catalog-api.mapper';
 
 export interface SearchSuggestionsResult {
   terms: string[];
@@ -39,14 +40,6 @@ export class CatalogService {
     return of(value);
   }
 
-  private readProducts(response: Product[] | { data: Product[] }): Product[] {
-    const products = 'data' in response ? response.data : response;
-    if (!Array.isArray(products) || products.some((product) => !Array.isArray(product.variants) || !Array.isArray(product.images))) {
-      throw new Error('Catalog response is missing variant or gallery data');
-    }
-    return products;
-  }
-
   getCategories(): Observable<Category[]> {
     return this.http
       .get<Category[] | { data: Category[] }>(`${this.apiUrl}/categories`)
@@ -74,60 +67,24 @@ export class CatalogService {
   }
 
   getFeaturedProducts(limit = 4): Observable<Product[]> {
-    const params = new HttpParams().set('limit', limit.toString());
-    return this.http
-      .get<Product[] | { data: Product[] }>(`${this.apiUrl}/products/featured`, { params })
-      .pipe(
-        map((response) => this.readProducts(response)),
-        catchError(() =>
-          this.sample(MOCK_PRODUCTS.filter((p) => p.isActive && p.isFeatured).slice(0, limit)),
-        ),
-      );
+    return this.getProducts({ limit }).pipe(map((result) => result.items));
   }
 
   getCuratedDrops(categoryKey = 'ALL', limit = 4): Observable<Product[]> {
-    let params = new HttpParams().set('limit', limit.toString());
-    if (categoryKey && categoryKey !== 'ALL') {
-      params = params.set('category', categoryKey);
-    }
-    return this.http
-      .get<Product[] | { data: Product[] }>(`${this.apiUrl}/products/curated`, { params })
-      .pipe(
-        map((response) => this.readProducts(response)),
-        catchError(() => {
-          const active = MOCK_PRODUCTS.filter((p) => p.isActive);
-          if (!categoryKey || categoryKey === 'ALL') return this.sample(active.slice(0, limit));
-          const filtered = active.filter(
-            (p) =>
-              p.category.slug.toLowerCase() === categoryKey.toLowerCase() ||
-              p.category.name.toLowerCase() === categoryKey.toLowerCase(),
-          );
-          return this.sample(filtered.slice(0, limit));
-        }),
-      );
+    return this.getProducts({ category: categoryKey === 'ALL' ? undefined : categoryKey, limit }).pipe(
+      map((result) => result.items),
+    );
   }
 
   getCategoryOptionsWithCounts(): Observable<CategoryOptionWithCount[]> {
-    return this.http
-      .get<CategoryOptionWithCount[] | { data: CategoryOptionWithCount[] }>(`${this.apiUrl}/categories/options`)
-      .pipe(
-        map((response) => {
-          const options = 'data' in response ? response.data : response;
-          if (!Array.isArray(options)) throw new Error('Invalid category options');
-          return options;
-        }),
-        catchError(() => {
-          const active = MOCK_PRODUCTS.filter((p) => p.isActive);
-          return this.sample([
-            { key: 'all', label: 'All Ready-to-Wear', count: active.length },
-            ...MOCK_CATEGORIES.map((cat) => ({
-              key: cat.slug,
-              label: cat.name,
-              count: active.filter((p) => p.categoryId === cat.id).length,
-            })),
-          ]);
-        }),
-      );
+    return this.getCategories().pipe(map((categories) => {
+      const counts = categories.map((category) => category.productCount ??
+        MOCK_PRODUCTS.filter((product) => product.isActive && product.categoryId === category.id).length);
+      return [
+        { key: 'all', label: 'All Ready-to-Wear', count: counts.reduce((total, count) => total + count, 0) },
+        ...categories.map((category, index) => ({ key: category.slug, label: category.name, count: counts[index] })),
+      ];
+    }));
   }
 
   getProducts(params: ProductQueryParams): Observable<PaginatedProductsResult> {
@@ -136,8 +93,6 @@ export class CatalogService {
     if (params.search) httpParams = httpParams.set('search', params.search);
     if (params.category && params.category !== 'all') httpParams = httpParams.set('category', params.category);
     if (params.brand && params.brand !== 'all') httpParams = httpParams.set('brand', params.brand);
-    if (params.gender && params.gender !== 'all') httpParams = httpParams.set('gender', params.gender);
-    if (params.season && params.season !== 'all') httpParams = httpParams.set('season', params.season);
     if (params.size && params.size !== 'ALL') httpParams = httpParams.set('size', params.size);
     if (params.minPrice !== undefined && params.minPrice !== null) httpParams = httpParams.set('minPrice', params.minPrice.toString());
     if (params.maxPrice !== undefined && params.maxPrice !== null) httpParams = httpParams.set('maxPrice', params.maxPrice.toString());
@@ -147,13 +102,11 @@ export class CatalogService {
     if (params.limit) httpParams = httpParams.set('limit', params.limit.toString());
 
     return this.http
-      .get<PaginatedProductsResult | { data: PaginatedProductsResult }>(`${this.apiUrl}/products`, { params: httpParams })
+      .get<CatalogApiList>(`${this.apiUrl}/products`, { params: httpParams })
       .pipe(
         map((response) => {
-          const result = 'data' in response ? response.data : response;
-          if (!Array.isArray(result.items) || result.items.some((product) => !Array.isArray(product.variants) || !Array.isArray(product.images))) {
-            throw new Error('Catalog response is missing variant or gallery data');
-          }
+          const result = mapCatalogList(response, this.apiUrl);
+          this.usingSampleData.set(false);
           return result;
         }),
         catchError(() => {
@@ -169,54 +122,25 @@ export class CatalogService {
       return of({ terms: [], matchingProducts: [] });
     }
 
-    const vocabulary = [
-      'trench coat',
-      'bomber jacket',
-      'technical shell',
-      'boxy hoodie',
-      'wool trousers',
-      'cargo jeans',
-      'chelsea boots',
-      'low sneakers',
-      'nylon sling',
-      'overshirt',
-      'merino knit',
-      'leather belt',
-    ];
-
-    const terms = vocabulary.filter((t) => t.includes(q)).slice(0, 4);
-
     return this.getProducts({ search: q, limit: 4 }).pipe(
       map((res) => ({
-        terms,
+        terms: res.items.map((product) => product.name),
         matchingProducts: res.items.slice(0, 4),
       })),
-      catchError(() => {
-        const matchingProducts = MOCK_PRODUCTS.filter(
-          (p) =>
-            p.isActive &&
-            (p.name.toLowerCase().includes(q) ||
-              p.brand.name.toLowerCase().includes(q) ||
-              p.category.name.toLowerCase().includes(q) ||
-              p.material.toLowerCase().includes(q)),
-        ).slice(0, 4);
-        return this.sample({ terms, matchingProducts });
-      }),
     );
   }
 
   getProductByIdOrSlug(idOrSlug: string): Observable<Product | null> {
     return this.http
-      .get<Product | { data: Product }>(`${this.apiUrl}/products/${idOrSlug}`)
+      .get<CatalogApiProduct>(`${this.apiUrl}/products/${encodeURIComponent(idOrSlug)}`)
       .pipe(
         map((response) => {
-          const product = 'data' in response ? response.data : response;
-          if (!Array.isArray(product.variants) || !Array.isArray(product.images)) {
-            throw new Error('Product response is missing variant or gallery data');
-          }
+          const product = mapCatalogProduct(response, this.apiUrl);
+          this.usingSampleData.set(false);
           return product;
         }),
-        catchError(() => {
+        catchError((error: unknown) => {
+          if (error instanceof HttpErrorResponse && error.status === 404) return of(null);
           const found =
             MOCK_PRODUCTS.find((p) => String(p.id) === idOrSlug || p.slug === idOrSlug) ?? null;
           return this.sample(found);
@@ -225,23 +149,9 @@ export class CatalogService {
   }
 
   getRelatedProducts(product: Product, limit = 4): Observable<Product[]> {
-    const target = product.id ?? product.slug;
-    const params = new HttpParams().set('limit', limit.toString());
-    return this.http
-      .get<Product[] | { data: Product[] }>(`${this.apiUrl}/products/${target}/related`, { params })
-      .pipe(
-        map((response) => this.readProducts(response)),
-        catchError(() => {
-          const related = MOCK_PRODUCTS.filter((p) => p.id !== product.id && p.isActive)
-            .sort((a, b) => {
-              const aSameCat = a.categoryId === product.categoryId ? 1 : 0;
-              const bSameCat = b.categoryId === product.categoryId ? 1 : 0;
-              return bSameCat - aSameCat;
-            })
-            .slice(0, limit);
-          return this.sample(related);
-        }),
-      );
+    return this.getProducts({ category: product.category.slug, limit: limit + 1 }).pipe(
+      map((result) => result.items.filter((item) => item.id !== product.id).slice(0, limit)),
+    );
   }
 
   private getMockProducts(params: ProductQueryParams): Observable<PaginatedProductsResult> {

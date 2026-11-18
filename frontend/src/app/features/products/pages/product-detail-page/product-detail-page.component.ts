@@ -5,6 +5,7 @@ import { ProductImageGalleryComponent } from '../../components/product-image-gal
 import { ProductPurchasePanelComponent } from '../../components/product-purchase-panel/product-purchase-panel.component';
 import { ProductReviewSectionComponent } from '../../components/product-review-section/product-review-section.component';
 import { RelatedProductsComponent } from '../../components/related-products/related-products.component';
+import { ProductImageManagerComponent } from '../../components/product-image-manager/product-image-manager.component';
 import { ProductDetailPageState } from './product-detail-page.state';
 
 @Component({
@@ -20,6 +21,7 @@ import { ProductDetailPageState } from './product-detail-page.state';
     ProductPurchasePanelComponent,
     ProductReviewSectionComponent,
     RelatedProductsComponent,
+    ProductImageManagerComponent,
   ],
   templateUrl: './product-detail-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

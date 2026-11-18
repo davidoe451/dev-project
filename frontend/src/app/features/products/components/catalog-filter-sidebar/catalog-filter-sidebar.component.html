@@ -14,22 +14,6 @@
     </div>
   </app-card>
 
-  <app-card title="Gender" padding="sm">
-    <div class="grid grid-cols-2 gap-1.5">
-      @for (g of genderOptions(); track g.value) {
-        <app-button [variant]="selectedGender() === g.value ? 'primary' : 'outline'" size="sm" (click)="genderChange.emit(g.value)">{{ g.label }}</app-button>
-      }
-    </div>
-  </app-card>
-
-  <app-card title="Collection & Season" padding="sm">
-    <div class="flex flex-col gap-1">
-      @for (season of seasonOptions(); track season.value) {
-        <app-button [variant]="selectedSeason() === season.value ? 'primary' : 'ghost'" size="sm" [fullWidth]="true" class="justify-start text-xs" (click)="seasonChange.emit(season.value)">{{ season.label }}</app-button>
-      }
-    </div>
-  </app-card>
-
   <app-card title="Size" subtitle="Filter by available variant size" padding="sm">
     <div class="flex flex-wrap gap-1.5">
       <app-button [variant]="selectedSize() === 'ALL' ? 'primary' : 'outline'" size="sm" (click)="sizeChange.emit('ALL')">ALL</app-button>

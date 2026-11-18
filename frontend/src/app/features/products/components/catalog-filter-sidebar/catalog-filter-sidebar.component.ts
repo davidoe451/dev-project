@@ -13,10 +13,6 @@ export class CatalogFilterSidebarComponent {
   readonly categoryOptions = input.required<CategoryOptionWithCount[]>();
   readonly totalItems = input(0);
   readonly selectedCategory = input('all');
-  readonly genderOptions = input.required<{ value: string; label: string }[]>();
-  readonly selectedGender = input('all');
-  readonly seasonOptions = input.required<{ value: string; label: string }[]>();
-  readonly selectedSeason = input('all');
   readonly availableSizes = input<string[]>([]);
   readonly selectedSize = input('ALL');
   readonly inStockOnly = input(false);
@@ -27,8 +23,6 @@ export class CatalogFilterSidebarComponent {
   readonly showMobileFilters = input(false);
 
   readonly categoryChange = output<string>();
-  readonly genderChange = output<string>();
-  readonly seasonChange = output<string>();
   readonly sizeChange = output<string>();
   readonly inStockChange = output<boolean>();
   readonly minPriceChange = output<string>();

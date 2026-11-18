@@ -43,14 +43,7 @@ export class HomePageComponent implements OnInit {
   private readonly catalogService = inject(CatalogService);
   readonly usingSampleData = this.catalogService.usingSampleData;
 
-  readonly categoryTabs = [
-    { key: 'ALL', label: 'All Curations' },
-    { key: 'outerwear', label: 'Outerwear' },
-    { key: 'tops-knitwear', label: 'Tops & Knitwear' },
-    { key: 'trousers-denim', label: 'Trousers & Denim' },
-    { key: 'footwear', label: 'Footwear' },
-    { key: 'accessories', label: 'Accessories' },
-  ];
+  readonly categoryTabs = signal([{ key: 'ALL', label: 'All Curations' }]);
 
   readonly selectedCategory = signal<string>('ALL');
   readonly curatedProducts = signal<Product[]>([]);
@@ -58,6 +51,10 @@ export class HomePageComponent implements OnInit {
   readonly quickAddNotice = signal<string | null>(null);
 
   ngOnInit(): void {
+    this.catalogService.getCategories().subscribe((categories) => this.categoryTabs.set([
+      { key: 'ALL', label: 'All Curations' },
+      ...categories.map((category) => ({ key: category.slug, label: category.name })),
+    ]));
     this.loadCuratedDrops('ALL');
   }
 
